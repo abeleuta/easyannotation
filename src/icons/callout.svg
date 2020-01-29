@@ -1,0 +1,12 @@
+<svg
+   viewBox="0 0 488 473"
+   aria-hidden="true" focusable="false" data-prefix="fas" data-icon="palette" 
+   xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg">
+  <defs><filter id="filter3746"><feGaussianBlur stdDeviation="6.5873096"/></filter></defs>
+  <path class="ea-button"
+     d="M 38,44 C 38,44 488,43 486,43 C 485,43 485,319 485,319 L 296,319 L 71,473 L 220,321 L 38,323 L 38,44 z"
+     style="fill:#000000;fill-opacity:0.5;fill-rule:evenodd;stroke:none;stroke-width:2.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter3746)" />
+  <path class="ea-button"
+     d="M 22,31 C 22,31 471,30 470,30 C 469,30 469,306 469,306 L 280,306 L 55,460 L 204,308 L 22,310 L 22,31 z"
+     style="fill-rule:evenodd;stroke-linecap:butt;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1" />
+</svg>

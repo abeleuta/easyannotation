@@ -1,0 +1,49 @@
+{
+    "name": "easyannotation",
+    "version": "1.0.1",
+    "main": "easyannotation.js",
+    "module": "easyannotation.es.js",
+    "description": "Image annotation in JavaScript",
+    "keywords": [
+        "annotate",
+        "mark",
+        "free draw",
+        "highlight",
+        "image",
+        "photo",
+        "comment",
+        "image"
+    ],
+    "scripts": {
+        "build": "rollup --config rollup/conf-prod.js",
+        "dev": "rollup --config rollup/conf-dev.js -w"
+    },
+    "author": "Andrei Beleuta",
+    "contributors": [],
+    "types": "typings/index.d.ts",
+    "dependencies": {
+        "@simonwep/pickr": "^1.4.5"
+    },
+    "devDependencies": {
+        "rollup-plugin-commonjs": "^10.1.0",
+        "rollup-plugin-livereload": "^1.0.4",
+        "rollup-plugin-node-resolve": "^5.2.0",
+        "rollup-plugin-serve": "^1.0.1",
+        "rollup-plugin-static-site": "^0.1.0",
+        "autoprefixer": "^9.6.5",
+        "canvas": "^2.6.0",
+        "canvg": "^2.0.0",
+        "jsdom": "^13.0.0",
+        "rollup": "^1.21.4",
+        "rollup-plugin-cpy": "^2.0.1",
+        "rollup-plugin-delete": "^1.1.0",
+        "rollup-plugin-generate-package-json": "^3.1.3",
+        "rollup-plugin-postcss": "^2.0.3",
+        "rollup-plugin-svgo": "^1.0.3",
+        "rollup-plugin-terser": "^5.1.2",
+        "rollup-plugin-typescript2": "^0.24.3",
+        "typescript": "^3.6.3",
+        "vanilla-picker": "^2.10.0",
+        "xmldom": "^0.1.27"
+    }
+}
