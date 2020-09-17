@@ -47,9 +47,9 @@ export class TextAnnotator extends RectAnnotator {
     }
     
     private createText(config: InternalConfig) {
-        var me = this;
+        let me = this;
 //        
-        var textSVG = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        let textSVG = document.createElementNS("http://www.w3.org/2000/svg", "text");
         textSVG.classList.add(config.ui + '-svg-text-element');
 //        textSVG.style.cursor = 'default';
         textSVG.addEventListener('dblclick', me.onTextClick);
@@ -84,7 +84,7 @@ export class TextAnnotator extends RectAnnotator {
     }
     
     private addEditor() {
-        var me = this,
+        let me = this,
             editorTextArea = me.editorTextArea,
             foreignObject = me.foreignObject;
         let svgContainer = me.svgGroupElement.parentElement;
@@ -123,7 +123,6 @@ export class TextAnnotator extends RectAnnotator {
         
         let box = svgContainer.getBoundingClientRect(),
             w = box.width.toString();
-//        console.log(JSON.stringify(box));
         foreignObject.setAttribute('width', w);
         foreignObject.setAttribute('height', box.height.toString());
         editorTextArea.style.width = w + 'px';
@@ -199,7 +198,7 @@ export class TextAnnotator extends RectAnnotator {
     }
     
     public toXML(): Element {
-        var elem = document.createElementNS(null, TextAnnotator.xtype),
+        let elem = document.createElementNS(null, TextAnnotator.xtype),
             me = this;
 
         me._toXML(elem);
@@ -215,8 +214,6 @@ export class TextAnnotator extends RectAnnotator {
     
     public fromXML(element: Element) {
         let me = this;
-        me.x = me.getXMLNumber(element, 'x');
-        me.y = me.getXMLNumber(element, 'y');
         me.width = me.getXMLNumber(element, 'w');
         me.height = me.getXMLNumber(element, 'h');
         
@@ -239,13 +236,14 @@ export class TextAnnotator extends RectAnnotator {
             me.setFont(font);
         }, 50);
 
-        super.moveBy(me.x, me.y, null);
+        super.moveBy(me.getXMLNumber(element, 'x'), me.getXMLNumber(element, 'y'), null);
         
     }
     
     public toJSON() : Object {
         let me = this,
             result = super.toJSON() as any;
+
         result.xtype = TextAnnotator.xtype;
         delete result.w;
         delete result.h;
@@ -260,14 +258,10 @@ export class TextAnnotator extends RectAnnotator {
     }
     
     public fromJSON(obj: any) {
-        //super.fromJSON(obj);
         let me = this;
-        if (obj.x) {
-            me.x = obj.x;
-        }
-        if (obj.y) {
-            me.y = obj.y;
-        }
+        me.x = 0;
+        me.y = 0;
+
         if (obj.w) {
             me.width = obj.w;
         }

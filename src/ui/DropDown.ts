@@ -166,7 +166,6 @@ export class DropDown {
     }
     
     protected onOptionEvent = (evt: MouseEvent | TouchEvent) => {
-        console.log('onOptionEvent:' + (evt.target as HTMLElement).className);
         let element = evt.target as HTMLElement,
             isTouchStartEvent = evt.type == 'touchend',
             isMouseOver = evt.type == 'mouseover' || isTouchStartEvent,
@@ -223,7 +222,7 @@ export class DropDown {
         let me = this,
             isMobilePhone = Utils.isPhone();
         if (subIndex !== undefined) {
-            var subDropDowns = me.optionsContainer.childNodes;
+            let subDropDowns = me.optionsContainer.childNodes;
             if (primaryIndex < 0 || primaryIndex >= subDropDowns.length) {
                 primaryIndex = 0;
             }
@@ -262,7 +261,6 @@ export class DropDown {
     }
     
     private checkContainer = () => {
-        console.log('checkContainer....');
         let me = this,
             parent = me.container.parentElement,
             body = document.body;
@@ -273,7 +271,6 @@ export class DropDown {
             parent = parent.parentElement;
         }
         
-        console.log('checkContainer DONE');
         me.subDropDownVisible = false;
         me.removeMobileCls();
         if (me.intervalID > 0) {
@@ -327,7 +324,6 @@ export class DropDown {
     }
     
     private onDropDownClick = (evt: Event) => {
-        console.log('onDropDownClick:' + evt.type);
         let me = this,
             body = document.body,
             optionsContainer = me.optionsContainer;
@@ -342,7 +338,7 @@ export class DropDown {
         }
         evt.stopPropagation();
         optionsContainer.style.display = 'block';
-        var parentBoundBox = optionsContainer.parentElement.getBoundingClientRect(),
+        let parentBoundBox = optionsContainer.parentElement.getBoundingClientRect(),
             optionsBounds = optionsContainer.getBoundingClientRect();
         if (parentBoundBox.top + optionsBounds.height > window.innerHeight) {
             optionsContainer.style.top = -(optionsBounds.height + parentBoundBox.height) + 'px';
@@ -388,8 +384,6 @@ export class DropDown {
             me.intervalID = 0;
         }
         
-//        console.log('hideDropDown:' + evt.type + '  target:' + evt.target);
-//        optionsContainer.style.display = 'none';
         if (optionsContainer.parentElement) {
             optionsContainer.parentElement.removeChild(optionsContainer);
         }
@@ -405,12 +399,9 @@ export class DropDown {
             me.optionsContainer.parentElement.removeChild(me.optionsContainer);
         }
         let target = evt.target as HTMLDivElement;
-        console.log('selectOption:' + target.innerHTML);
         while (!target.getAttribute('optIndex')) {
             target = target.parentElement as HTMLDivElement;
         }
-        
-//        console.log(target.innerHTML);
         
         let value = target.getAttribute('optValue'),
             allOptions = target.parentElement.childNodes,

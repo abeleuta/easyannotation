@@ -45,7 +45,7 @@ export class RectAnnotator extends BaseAnnotator {
     
     protected initElement(config: Config) {
         
-        var rectSVG = document.createElementNS("http://www.w3.org/2000/svg", "rect"),
+        let rectSVG = document.createElementNS("http://www.w3.org/2000/svg", "rect"),
             me = this;
         
         rectSVG.setAttribute('x', '0');
@@ -56,8 +56,8 @@ export class RectAnnotator extends BaseAnnotator {
         me.svgGroupElement.appendChild(rectSVG);
         me.baseSVGElement = rectSVG;
         
-        for(var i=0;i<4;i++) {
-            var resizeEl = me.createResizeElement(config);
+        for(let i=0;i<4;i++) {
+            let resizeEl = me.createResizeElement(config);
             me.resizeElements.push(resizeEl);
             me.addResizeEvents(resizeEl);
             me.svgGroupElement.appendChild(resizeEl);
@@ -77,7 +77,7 @@ export class RectAnnotator extends BaseAnnotator {
     }
     
     protected onResizeTouchStart = (evt: TouchEvent) => {
-        var touches = evt.changedTouches[0];
+        let touches = evt.changedTouches[0];
         this.onResizeDown(touches);
     }
     
@@ -97,7 +97,7 @@ export class RectAnnotator extends BaseAnnotator {
         me.dragStartH = me.height;
         me.dragStartX = me.x;
         me.dragStartY = me.y;
-        for(var i=0;i<numResizeElements;i++) {
+        for(let i=0;i<numResizeElements;i++) {
             if (resizeElem == this.resizeElements[i]) {
                 this.currentResizeIndex = i;
                 break;
@@ -110,10 +110,10 @@ export class RectAnnotator extends BaseAnnotator {
     }
     
     public moveBy(dx: number, dy: number, evt: MouseEvent) {
-        var me = this,
+        let me = this,
             resizeIndex = me.currentResizeIndex;
         if (resizeIndex >= 0) {
-            var pixelRatio = me.getPixelRatio(),
+            let pixelRatio = me.getPixelRatio(),
                 difX = evt.screenX / pixelRatio - me.screenX,
                 difY = evt.screenY / pixelRatio - me.screenY;
             switch (resizeIndex) {
@@ -162,7 +162,7 @@ export class RectAnnotator extends BaseAnnotator {
     }
     
     protected arrangeResizeElements() {
-        var halfResizeElemeSize = this.RESIZE_ELEM_SIZE / 2,
+        let halfResizeElemeSize = this.RESIZE_ELEM_SIZE / 2,
             me = this,
             left = me.x - halfResizeElemeSize,
             right = me.x + me.width - halfResizeElemeSize,
@@ -197,7 +197,7 @@ export class RectAnnotator extends BaseAnnotator {
         if (fillType == 0) {
             me.baseSVGElement.style.fill = me.fillStyle.color;
         } else {
-            var fillPattern = AnnotationUtils.createFillPattern(me.config, fillType, me.fillPattern);
+            let fillPattern = AnnotationUtils.createFillPattern(me.config, fillType, me.fillPattern);
             fillPattern.style.stroke = me.fillStyle.color;
             fillPattern.style.fill = me.fillStyle.color;
             me.fillPattern = fillPattern;
@@ -211,7 +211,7 @@ export class RectAnnotator extends BaseAnnotator {
             super.setSelected(selected);
             let resizeElemens = me.resizeElements,
                 n = resizeElemens.length;
-            for(var i=0;i<n;i++) {
+            for(let i=0;i<n;i++) {
                 me.resizeElements[i].style.display = selected ? '' : 'none';
             }
         }
@@ -258,7 +258,7 @@ export class RectAnnotator extends BaseAnnotator {
     }
     
     public toXML() : Element {
-        var elem = document.createElementNS(null, RectAnnotator.xtype);
+        let elem = document.createElementNS(null, RectAnnotator.xtype);
         this._toXML(elem);
         return elem;
     }
@@ -280,8 +280,11 @@ export class RectAnnotator extends BaseAnnotator {
     public fromXML(element: Element) {
         let me = this,
             getValidNumber = function(val: string) {
-                var num = parseInt(val, 10);
-                if (isNaN(num) || num < 0) {
+                if (val === null) {
+                    return 0;
+                }
+                let num = parseInt(val, 10);
+                if (isNaN(num)) {
                     num = 0;
                 }
                 return num;

@@ -40,8 +40,6 @@ import {Utils} from "./utils/Utils"
 import EraseIcon from "./icons/eraser-solid.svg"
 import SaveIcon from "./icons/save-solid.svg"
 
-import Pickr from '@simonwep/pickr';
-
 export const enum ExportType {
     XML = 0,
     JSON = 1,
@@ -120,7 +118,10 @@ export class AnnotatorContainer {
             me.imageElement.onload = me.imageLoaded;
         } else {
             me.imageElement = imageElement as HTMLImageElement;
-            me.imgLoaded = true;
+            me.imgLoaded = me.imageElement.complete;
+            if (!me.imgLoaded) {
+                me.imageElement.onload = me.imageLoaded;
+            }
         }
         
         if (!config) {
@@ -167,7 +168,7 @@ export class AnnotatorContainer {
         if (!config.fillStyle) {
             config.fillStyle = {
                 fillType: 0,
-                color: '#C1DDFF',
+                color: '#8EB9ED',
                 opacity: 100
             } as FillStyle;
         }
@@ -191,10 +192,10 @@ export class AnnotatorContainer {
         }
         
         (internalConfig as InternalConfig).annotatorIdx = AnnotationUtils.getNextAnnotatorIdx();
-        (internalConfig as InternalConfig).sizePercentage = Math.max(0.25, Math.min(1, width / 800));
+        // (internalConfig as InternalConfig).sizePercentage = Math.max(0.25, Math.min(1, width / 800));
         
         me.config = internalConfig as InternalConfig;
-        var confDrawStyle = config.drawStyle,
+        let confDrawStyle = config.drawStyle,
             confFillStyle = config.fillStyle;
         me.drawStyle = {
             color: confDrawStyle.color,
@@ -209,9 +210,9 @@ export class AnnotatorContainer {
             color: confFillStyle.color,
             opacity: confFillStyle.opacity
         } as FillStyle;
-        
+
     }
-    
+
     private imageLoaded = () => {
         this.imgLoaded = true;
     }
@@ -228,14 +229,22 @@ export class AnnotatorContainer {
                 exportType = ExportType.IMAGE;
             }
             me.exportType = exportType;
-            me.init();
-            me.addListeners();
-            me.initToolbar();
+            if (this.config.loadOnClick === true) {
+                Utils.on(this.imageElement, ['click', 'touchstart'], me._showAnnotator);
+            } else {
+                this._showAnnotator();
+            }
         }
+    }
+
+    private _showAnnotator = () => {
+        this.init();
+        this.addListeners();
+        this.initToolbar();
     }
     
     private init() {
-        var d = document, 
+        let d = document,
             containerElement = d.createElement('div'),
             svgContainer = d.createElementNS('http://www.w3.org/2000/svg', 'svg'),
             me = this,
@@ -243,7 +252,7 @@ export class AnnotatorContainer {
             ui = config.ui,
             imageElement = me.imageElement;
         containerElement.className = ui + '-annotator-container';
-        
+
         if (config.containerCls) {
             containerElement.classList.add(config.containerCls);
         }
@@ -254,13 +263,15 @@ export class AnnotatorContainer {
         
         me.selectRect = d.createElementNS('http://www.w3.org/2000/svg', 'rect');
         me.selectRect.setAttribute('class', ui + '-annotator-select-rect');
-        
+
         if (me.width == 0 || me.height == 0) {
             me.width = imageElement.clientWidth || imageElement.width;
             me.height = imageElement.clientHeight || imageElement.height;
         }
-        
-        var w = me.width.toString(),
+
+        (config as InternalConfig).sizePercentage = Math.max(0.25, Math.min(1, me.width / 800));
+
+        let w = me.width.toString(),
             h = me.height.toString();
         svgContainer.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
         svgContainer.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink');
@@ -269,7 +280,7 @@ export class AnnotatorContainer {
         svgContainer.setAttribute('height', h);
         svgContainer.setAttribute('viewBox', '0 0 ' + w + ' ' + h);
         
-        var rect = imageElement.getBoundingClientRect(),
+        let rect = imageElement.getBoundingClientRect(),
             parentRect = me.targetElement.parentElement.getBoundingClientRect();
         
         containerElement.appendChild(svgContainer);
@@ -284,9 +295,6 @@ export class AnnotatorContainer {
         
         me.targetElement.appendChild(containerElement);
         
-        //console.log(rect.top + ' parentTop=' + parentRect.top + ' parentP=' + me.targetElement.parentElement.getBoundingClientRect().top);
-
-        //        containerRect.top/* - containerParentRect.top*/ + window.scrollY;
         let x = config.x,
             y = config.y;
         if (x === null || x === undefined) {
@@ -339,49 +347,42 @@ export class AnnotatorContainer {
                 me.imageElement.style.visibility = 'hidden';
             }
         }
-        
-        if (typeof(Pickr) === 'undefined') {
-            me.loadPickr();
-        }
+
+        Utils.on(document, ['click', 'touchstart'], this.docPress);
     }
-    
+
+    private docPress = (evt: MouseEvent | TouchEvent) => {
+        let finalEvent = Utils.getEvent(evt);
+        if (finalEvent) {
+            let target = finalEvent.target,
+                container = this.container,
+                ui = this.config.ui;
+            while (target) {
+                if (target == container) {
+                    return;
+                }
+                if (target instanceof Element) {
+                    let cls = target.classList;
+                    if (cls.contains(ui + '-dialog') ||
+                        cls.contains('ea-color-picker')) {
+                        return;
+                    }
+                    target = (target as Element).parentElement;
+                } else {
+                    return;
+                }
+            }
+        }
+
+        this.deselectAll();
+    }
+
     private onResize = (evt: UIEvent) => {
         this.doLayout();
     }
-    
-    private loadPickr() {
-        //first check if Pickr tags were not created already
-        let d = document,
-            links = d.head.getElementsByTagName('link'),
-            numLinks = links.length, i,
-            linkID = 'easyAnnotationPickrLink965237';
 
-        for (i = 0; i < numLinks; i++) {
-            if (links[i].id == linkID) {
-                return;
-            }
-        }
-
-        let style = d.createElement('link');
-        style.rel = 'stylesheet';
-        style.id = linkID;
-        style.href = 'https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/themes/nano.min.css';
-        d.head.appendChild(style);7        
-        
-        window.setTimeout(function() {
-            let script = d.createElement('script'),
-                browserSpec = Utils.getBrowserSpec();
-            if (browserSpec.name.toLowerCase().indexOf('safari') >= 0 && browserSpec.version < 11) {
-                script.src = 'http://easyannotation.com/js/pickr.min.js';
-            } else {
-                script.src = 'https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/pickr.min.js';
-            }
-            d.head.appendChild(script);
-        }, 1000);
-    }
-    
     private initGradients(containerElement: HTMLElement) {
-        var gradientSVGContainer = <Element>document.getElementById('easyAnnotationGradientSVG');
+        let gradientSVGContainer = <Element>document.getElementById('easyAnnotationGradientSVG');
         if (!gradientSVGContainer) {
             gradientSVGContainer = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
             gradientSVGContainer.setAttribute('id', 'easyAnnotationGradientSVG');
@@ -399,7 +400,7 @@ export class AnnotatorContainer {
     }
     
     private addListeners() {
-        var svgContainer = this.svgContainer;
+        let svgContainer = this.svgContainer;
         svgContainer.addEventListener('mousemove', this.onMouseMove);
         svgContainer.addEventListener('mousedown', this.onMouseDown);
         svgContainer.addEventListener('mouseup', this.onMouseUp);
@@ -457,7 +458,6 @@ export class AnnotatorContainer {
                     if (item.intersects(rectX, rectY, rectWidth, rectHeight)) {
                         item.setSelected(true);
                         selectedItems.push(item);
-//                        console.log('intersects!!!');
                     } else {
                         item.setSelected(false);
                     }
@@ -513,15 +513,8 @@ export class AnnotatorContainer {
         me.deselectAll();
     }
     
-//    private log(str: string) {
-//        let textArea = (document.getElementById("logArea") as HTMLTextAreaElement);
-//        textArea.value += str + '\n';
-//        textArea.scrollTop = textArea.scrollHeight;
-//    }
-    
     private onMouseUp = (evt: MouseEvent) => {
         let me = this;
-//        me.log('onMouseUp............');
         me.isDragging = false;
         if (me.selectRect.parentNode) {
             me.svgContainer.removeChild(me.selectRect);
@@ -549,34 +542,15 @@ export class AnnotatorContainer {
             targetRect = me.targetElement.getBoundingClientRect(),
             placeOnBody = me.targetElement == document.body;
 
-        console.log('toolbarTop=' + toolbarTop);
         if (!placeOnBody) {
-            console.log('me.targetElement.getBoundingClientRect().top=' + me.targetElement.getBoundingClientRect().top + '  scrollY=' + window.scrollY);
             toolbarTop -= (targetRect.top + winScrollY);
             toolbarLeft -= (targetRect.left + winScrollX);
-            console.log('not body toolbarTop=' + toolbarTop);
         }
         
         if (me.toolbar) {
             numToolbarButtons = me.toolbar.getContainer().childNodes.length;
-//            console.log('left=' + toolbarContainer.style.left);
-//
-////            toolbarContainer.style.top = (containerRect.top - toolbarRect.height) + 'px';
-////            toolbarContainer.style.left = (containerRect.right - toolbarRect.width) + 'px';
-//            buttonsToolbarWidth = toolbarRect.width;
-//            toolbarWidth += buttonsToolbarWidth;
-//            let firstToolbarItem = toolbarContainer.firstChild,
-//                percWidth = 100 / toolbarContainer.childNodes.length;
-//            while (firstToolbarItem) {
-//                (firstToolbarItem as HTMLElement).style.width = percWidth + '%';
-//                firstToolbarItem = firstToolbarItem.nextSibling;
-//            }
-
-
         }
         
-        console.log('is image=' + me.isImageElement + ' image rect=' + JSON.stringify(containerRect));
-
         if (me.propertiesToolbar) {
             numPropsButtons = me.propertiesToolbar.getContainer().childNodes.length;
             let propToolbarContainer = me.propertiesToolbar.getContainer(),
@@ -584,27 +558,15 @@ export class AnnotatorContainer {
             toolbarHeight = toolbarRect.height;
             propToolbarContainer.style.top = (toolbarTop - toolbarRect.height) + 'px';
             propToolbarContainer.style.left = toolbarLeft + 'px';
-//            propertiesToolbarWidth = toolbarRect.width;
-//            toolbarWidth += propertiesToolbarWidth;
-//            
-//            let firstToolbarItem = propToolbarContainer.firstChild,
-//                percWidth = 100 / propToolbarContainer.childNodes.length;
-//            while (firstToolbarItem) {
-//                (firstToolbarItem as HTMLElement).style.width = percWidth + '%';
-//                firstToolbarItem = firstToolbarItem.nextSibling;
-//            }
-
         }
-        
+
         let maxWidth = me.width - 20,
             buttonWidth = maxWidth / (numToolbarButtons + numPropsButtons);
         
         buttonWidth = Math.min(30, Math.max(24, buttonWidth));
-        //console.log('buttonWidth=' + buttonWidth + '  maxWidth=' + maxWidth);
         buttonsToolbarWidth = numToolbarButtons * buttonWidth;
         propertiesToolbarWidth = numPropsButtons * buttonWidth;
-        //console.log('numToolbarButtons=' + numToolbarButtons + ' buttonsToolbarWidth=' + buttonsToolbarWidth);
-        
+
         if (buttonsToolbarWidth > 0) {
             
             let maxButtonsWidth = maxWidth - propertiesToolbarWidth;
@@ -619,10 +581,8 @@ export class AnnotatorContainer {
             if (toolbarHeight == 0) {
                 toolbarHeight = toolbarRect.height;
             }
-//            console.log(JSON.stringify(toolbarRect));
-//
+
             toolbarContainer.style.top = (toolbarTop - toolbarRect.height) + 'px';
-            console.log('toolbarRect.width=' + toolbarRect.width + '  containerRect.right=' + containerRect.right);
             toolbarContainer.style.left = ((containerRect.right - (placeOnBody ? 0 : targetRect.left)) - toolbarRect.width) + 'px';
             me.toolbar.doLayout();
             
@@ -661,8 +621,6 @@ export class AnnotatorContainer {
         me.container.style.top = toolbarTop + 'px';
         me.container.style.left = toolbarLeft + 'px';
         
-        console.log('toolbarWidth=' + toolbarWidth + '  width=' + width);
-        
 //        if (toolbarWidth > width - 20) {
 //            let perc = (width - 20) / toolbarWidth,
 //                buttonWidth,
@@ -686,7 +644,6 @@ export class AnnotatorContainer {
 //                me.propertiesToolbar.getContainer().style.width = propertiesToolbarWidth+ 'px';
 //            }
 //            
-////            alert('need resize');
 //        }
 
     }
@@ -786,23 +743,20 @@ export class AnnotatorContainer {
     }
     
     private toolbarItemClickHandler(evt: MouseEvent, item: ToolbarItem) {
-        var me = this;
+        let me = this;
         me.toolbar.deselectAll(item);
         if (item instanceof AbstractToolbarItem) {
-            var abstractToolbarItem = item as AbstractToolbarItem;
-            var newAnnotator = abstractToolbarItem.createAnnotator(me.config, me);
+            let abstractToolbarItem = item as AbstractToolbarItem;
+            let newAnnotator = abstractToolbarItem.createAnnotator(me.config, me);
             if (newAnnotator == null) {
                 me.pushedAnnotator = null;
                 me.disableListeners(false);
                 return;
             }
             
-//            console.log('w=' + newAnnotator.getWidth());
-            
             newAnnotator.moveBy(
                 (me.width - newAnnotator.getWidth()) / 2, 
                 (me.height - newAnnotator.getHeight()) / 2, null);
-//            console.log('this.buttonPushed=' + this.buttonPushed);
             me._addElement(newAnnotator, me.drawStyle, me.fillStyle);
             me.deselectAll();
             newAnnotator.setSelected(true);
@@ -836,14 +790,11 @@ export class AnnotatorContainer {
                     me.deleteSelection();
                     break;
                 case 'save':
-//                    console.log('save');
                     me.save(function(data) {
                         if (me.completeCallback) {
                             me.completeCallback(data);
                         }
-                        console.log(data);
                     }, me.exportType);
-//                    console.log(me.save(ExportType.JSON));
                     break;
             }
         }
@@ -905,8 +856,8 @@ export class AnnotatorContainer {
     
     public selectAll() {
         this.selectedItems.length = 0;
-        for(var i in this.annotators) {
-            var annotator = this.annotators[i];
+        for(let i in this.annotators) {
+            let annotator = this.annotators[i];
             annotator.setSelected(true);
             this.selectedItems.push(annotator);
         }
@@ -914,8 +865,8 @@ export class AnnotatorContainer {
     }
     
     public deselectAll() {
-        var selItems = this.selectedItems;
-        for(var selItem of selItems) {
+        let selItems = this.selectedItems;
+        for(let selItem of selItems) {
             selItem.setSelected(false);
         }
         selItems.length = 0;
@@ -950,12 +901,12 @@ export class AnnotatorContainer {
     }
     
     public clear() {
-        var me = this,
+        let me = this,
             svgContainer = me.svgContainer;
             
         me.selectedItems.length = 0;
         me.annotators.length = 0;
-        var children = svgContainer.children, l = children.length, i,
+        let children = svgContainer.children, l = children.length, i,
             child, mainImageElement = me.rectSVGElement,
             defs = me.defs;
         for (i=l-1;i>=0;i--) {
@@ -987,7 +938,6 @@ export class AnnotatorContainer {
         switch (exportType) {
             case ExportType.XML:
                 let xml = this.saveAsXML();
-//                console.log(xml);
                 callback(xml);
                 break;
             case ExportType.JSON:
@@ -1003,7 +953,7 @@ export class AnnotatorContainer {
     }
     
     public loadXML(xml: string) {
-        var parser = new DOMParser();
+        let parser = new DOMParser();
         let doc = parser.parseFromString(xml, 'text/xml'),
             mainElement = doc.getElementsByTagName('main');
             
@@ -1059,10 +1009,9 @@ export class AnnotatorContainer {
     }
     
     public loadJSON(json: string) {
-        var jsonObj = JSON.parse(json) as any,
+        let jsonObj = JSON.parse(json) as any,
             me = this,
             checkLoaded = function() {
-                console.log('cjeck json loaded');
                 if (!me.imgLoaded) {
                     window.setTimeout(checkLoaded, 500);
                 } else {
@@ -1075,8 +1024,11 @@ export class AnnotatorContainer {
             throw 'Invalid JSON Object!';
         }
     }
-    
-    private saveAsXML() : string {
+
+    /**
+     * Export data in XML format.
+     */
+    public saveAsXML() : string {
         let xmlDoc = document.implementation.createDocument(null, 'ea', null),
             mainElement = xmlDoc.createElementNS(null, 'main');
         
@@ -1093,16 +1045,19 @@ export class AnnotatorContainer {
         let serializer = new XMLSerializer();
         return serializer.serializeToString(xmlDoc);
     }
-    
-    private saveAsJSON() : string {
+
+    /**
+     * Export data in JSON format.
+     */
+    public saveAsJSON() : string {
         
-        var data = [];
+        let data = [];
         for (let annotator of this.annotators) {
             let jsonObj = annotator.toJSON();
             data.push(jsonObj);
         }
          
-        var jsonObj = {
+        let jsonObj = {
             v: '1.0',
             data: data
         };

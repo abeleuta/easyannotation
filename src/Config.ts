@@ -18,6 +18,9 @@ export default interface Config {
   
   drawStyle: DrawStyle;
   fillStyle: FillStyle;
+
+  //if true, annotator will load when user click or tap on the image element
+  loadOnClick: boolean;
   
   x? : number;
   y?: number;
@@ -30,4 +33,5 @@ export default interface Config {
   containerCls?: string;
   toolbarCls?: string;
   toolbarItems:Array<ToolbarItem>;
+  defaultColors: [] | null
 }

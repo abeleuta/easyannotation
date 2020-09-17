@@ -31,7 +31,7 @@ export class ImageAnnotator extends RectAnnotator {
 //        foreignObject.innerHTML = '<div class="image-uploader-text">Click or drag image here</div>';
         foreignObject.innerHTML = 
             '<div style="height: 100%;display:flex;position:absolute;width:100%;">\
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 165 35">\
+                <svg style="width:100%;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 165 35">\
                     <text style="fill:black;" dy="1.5em">Click here or drag image</text>\
                 </svg></div>';
         foreignObject.appendChild(uploadInput);
@@ -49,7 +49,7 @@ export class ImageAnnotator extends RectAnnotator {
     }
     
     private onFileUpload = (evt: Event) => {
-        var reader  = new FileReader(),
+        let reader  = new FileReader(),
             me = this;
         
         if (!me.uploadInput.files.length) {
@@ -160,7 +160,7 @@ export class ImageAnnotator extends RectAnnotator {
     }
     
     public toXML() : Element {
-        var elem = document.createElementNS(null, ImageAnnotator.xtype),
+        let elem = document.createElementNS(null, ImageAnnotator.xtype),
             me = this;
         
         elem.setAttribute('i', me.imageSVGElement.getAttributeNS('http://www.w3.org/1999/xlink', 'href'));

@@ -19,7 +19,7 @@ declare var window: any;
     };
 
 // Polyfills DOM4 MouseEvent
-    var MouseEventPolyfill = function (eventType: string, params: MouseEventArgs) {
+    let MouseEventPolyfill = function (eventType: string, params: MouseEventArgs) {
         if (!params) {
             params = new MouseEventArgs();
         }
@@ -54,7 +54,11 @@ export {TextToolbarItem} from "./toolbar/TextToolbarItem"
 export {LineToolbarItem} from "./toolbar/LineToolbarItem"
 export {ArrowToolbarItem} from "./toolbar/ArrowToolbarItem"
 export {EllipseToolbarItem} from "./toolbar/EllipseToolbarItem"
-
+export {CalloutToolbarItem} from "./toolbar/CalloutToolbarItem"
+export {BlurToolbarItem} from "./toolbar/BlurToolbarItem"
+export {FreeDrawToolbarItem} from "./toolbar/FreeDrawToolbarItem"
+export {ImageToolbarItem} from "./toolbar/ImageToolbarItem"
+export {RectToolbarItem} from "./toolbar/RectToolbarItem"
 
 export enum ExportType {
     XML = 0,

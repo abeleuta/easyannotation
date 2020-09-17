@@ -80,18 +80,16 @@ var shg_table = [
     24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24];
 
 function filterGaussBlurRGBA(imageData: any, radius: number) {
-    var pixels = imageData.data,
+    let pixels = imageData.data,
         width = imageData.width,
         height = imageData.height;
 
-    var x, y, i, p, yp, yi, yw, r_sum, g_sum, b_sum, a_sum,
+    let x, y, i, p, yp, yi, yw, r_sum, g_sum, b_sum, a_sum,
         r_out_sum, g_out_sum, b_out_sum, a_out_sum,
         r_in_sum, g_in_sum, b_in_sum, a_in_sum,
         pr, pg, pb, pa, rbs;
 
-    console.log('radius=' + radius);
-
-    var div = radius + radius + 1,
+    let div = radius + radius + 1,
         widthMinus1 = width - 1,
         heightMinus1 = height - 1,
         radiusPlus1 = radius + 1,

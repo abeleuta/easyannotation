@@ -35,15 +35,15 @@ export class Toolbar {
     }
     
     public init(config: Config) {
-        var container = document.createElement('div');
+        let container = document.createElement('div');
         container.className = config.ui + '-toolbar';
         
         if (config.toolbarCls) {
             container.classList.add(config.toolbarCls);
         }
         
-        for (var item of this.items) {
-            var toolbarElement = this.getUIElement(config, item);
+        for (let item of this.items) {
+            let toolbarElement = this.getUIElement(config, item);
             item.element = toolbarElement;
             container.appendChild(toolbarElement);
         }
@@ -58,8 +58,8 @@ export class Toolbar {
     }
     
     protected getUIElement(config: Config, toolbarItem: ToolbarItem) {
-        var me = this;
-        var element = document.createElement('div');
+        let me = this;
+        let element = document.createElement('div');
         element.className = config.ui + '-toolbar-item';
         
         if (toolbarItem.itemId) {
@@ -120,7 +120,6 @@ export class Toolbar {
             totalToolbarWidth = buttonWidth * numAllowedButtons;
         }
         
-        console.log('numAllowedButtons=' + numAllowedButtons);
         if (numAllowedButtons < numTotalItems) {
             if (!me.submenuItems) {
                 me.submenuItems = [];

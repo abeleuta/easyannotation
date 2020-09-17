@@ -138,20 +138,12 @@ export class CalloutAnnotator extends RectAnnotator {
     private getNextPoint(x1: number, y1: number, x2: number, y2: number, nextX:number) {
 //        we have 2 points, calculate equation of each of 4 lines
         let slope = (y2 - y1) / (x2 - x1);
-//        y - y1 = m (x - x1)
-//        let x1, y1 = first point
-//        if (nextX > 0) {
         return slope * (nextX - x1) + y1;
-//        } else {
-////            x - x1 = (y - y1) / m
-////            x = (y - y1) / m + x1
-//            return (nextY - y1) / slope + x1;
-//        }
     }
     
     protected addResizeElements(config: InternalConfig) {
         let me = this;
-        for(var i=0;i<5;i++) {
+        for(let i=0;i<5;i++) {
             let resizeEl = this.createResizeElement(config);
             me.resizeElements.push(resizeEl);
             me.addResizeEvents(resizeEl);
@@ -162,7 +154,7 @@ export class CalloutAnnotator extends RectAnnotator {
     }
     
     protected onResizeTouchStart = (evt: TouchEvent) => {
-        var touches = evt.changedTouches[0];
+        let touches = evt.changedTouches[0];
         this.onResizePress(touches);
     }
     
@@ -185,13 +177,8 @@ export class CalloutAnnotator extends RectAnnotator {
         for(let i=0;i<numResizeElements;i++) {
             if (resizeElem == me.resizeElements[i]) {
                 me.currentResizeIndex = i;
-//                if (i == 4) {
-                    me.calloutDragX = me.calloutHeadX;
-                    me.calloutDragY = me.calloutHeadY;
-//                } else {
-//                    me.calloutPercX = (me.calloutHeadX * 100)/me.width;
-//                    me.calloutDistY = me.calloutHeadY - me.height;
-//                }
+                me.calloutDragX = me.calloutHeadX;
+                me.calloutDragY = me.calloutHeadY;
                 break;
             }
         }
@@ -202,7 +189,6 @@ export class CalloutAnnotator extends RectAnnotator {
             halfResizeElemeSize = me.RESIZE_ELEM_SIZE / 2,
             left = me.x - halfResizeElemeSize,
             right = me.right - halfResizeElemeSize,
-//            right = me.x + me.width - halfResizeElemeSize,
             top = me.y - halfResizeElemeSize,
             bottom = me.bottom - halfResizeElemeSize;
 //            bottom = me.y + me.height * 0.6469 - halfResizeElemeSize;
@@ -229,20 +215,13 @@ export class CalloutAnnotator extends RectAnnotator {
             switch (resizeIndex) {
                 case 0:
 //                top left
-//                    me.right = me.dragStartW - difX;
-//                    me.bottom = me.dragStartH - difY;
                     me.x = me.dragStartX + difX;
                     me.y = me.dragStartY + difY;
-//                    me.calloutHeadX = me.calloutDragX + difX;
-//                    me.calloutHeadY = me.calloutDragY + difY;
                     break;
                 case 1:
 //                top right
                     me.y = me.dragStartY + difY;
                     me.right = me.dragStartW + difX;
-//                    me.bottom = me.dragStartH - difY/2;
-//                    me.calloutHeadX = me.calloutDragX + difX;
-//                    me.calloutHeadY = me.calloutDragY - difY/2;
                     break;
                 case 2:
 //                bottom right
@@ -252,7 +231,6 @@ export class CalloutAnnotator extends RectAnnotator {
                 case 3:
 //                bottom left
                     me.x = me.dragStartX + difX;
-//                    me.right = me.dragStartW - difX;
                     me.bottom = me.dragStartH + difY;
                     break;
                 case 4:
@@ -262,31 +240,21 @@ export class CalloutAnnotator extends RectAnnotator {
                         calloutPoint = new Point(me.calloutHeadX, me.calloutHeadY);
                     if (me.pointInTriangle(calloutPoint, centerPoint, me.points[1], me.points[2])) {
                         me.direction = CalloutAnnotator.DIRECTION_RIGHT;
-//                        console.log('right');
                     } else if (me.pointInTriangle(calloutPoint, centerPoint, me.points[2], me.points[3])) {
                         me.direction = CalloutAnnotator.DIRECTION_BOTTOM;
-//                        console.log('bottom');
                     } else if (me.pointInTriangle(calloutPoint, centerPoint, me.points[3], me.points[4])) {
                         me.direction = CalloutAnnotator.DIRECTION_LEFT;
-//                        console.log('left');
                     } else if (me.pointInTriangle(calloutPoint, centerPoint, me.points[4], me.points[1])) {
                         me.direction = CalloutAnnotator.DIRECTION_TOP;
-//                        console.log('top');
                     }
                     break;
             }
             me.baseSVGElement.setAttribute('x', me.x.toString());
             me.baseSVGElement.setAttribute('y', me.y.toString());
-//            me.baseSVGElement.setAttribute('width', me.width.toString());
-//            me.baseSVGElement.setAttribute('height', me.height.toString());
-//            me.arrangeResizeElements();
         } else {
             super.moveBy(dx, dy, evt);
         }
         
-//            super.moveBy(dx, dy, evt);
-//            me.calloutHeadX = me.width * 0.1127;
-//            me.calloutHeadY = me.height * 0.9725;
         me.arrangeResizeElements();
         me.resize();
     }
@@ -349,7 +317,7 @@ export class CalloutAnnotator extends RectAnnotator {
     }
     
     public toXML() : Element {
-        var elem = document.createElementNS(null, CalloutAnnotator.xtype),
+        let elem = document.createElementNS(null, CalloutAnnotator.xtype),
             me = this;
         me._toXML(elem);
         
@@ -362,7 +330,7 @@ export class CalloutAnnotator extends RectAnnotator {
         elem.setAttribute('cx', me.calloutHeadX.toString());
         elem.setAttribute('cy', me.calloutHeadY.toString());
         elem.setAttribute('d', me.direction.toString());
-        
+
         return elem;
     }
     
@@ -375,41 +343,13 @@ export class CalloutAnnotator extends RectAnnotator {
         me.calloutHeadX = me.getXMLNumber(element, 'cx');
         me.calloutHeadY = me.getXMLNumber(element, 'cy');
         me.direction = me.getXMLNumber(element, 'd');
-        me.moveBy(me.getXMLNumber(element, 'dx') - me.getXMLNumber(element, 'x'), 
-                me.getXMLNumber(element, 'dy') - me.getXMLNumber(element, 'y'), null);
+
+        me.moveBy(me.getXMLNumber(element, 'dx') - me.x,
+                me.getXMLNumber(element, 'dy') - me.y, null);
         me.resize();
-        
+
     }
-    
-//    public toXML() : Element {
-//        var elem = document.createElementNS(null, 'al'),
-//            me = this;
-//        me.addDraw(elem);
-//        me.addFill(elem);
-//        
-//        elem.setAttribute('x1', me.x1.toString());
-//        elem.setAttribute('y1', me.y1.toString());
-//        elem.setAttribute('x2', me.x2.toString());
-//        elem.setAttribute('y2', me.y2.toString());
-//        
-//        return elem;
-//    }
-//    
-//    public toJSON() : Object {
-//        let me = this,
-//        result = {
-//            xtype: 'arrow',
-//            x1: me.x1,
-//            y1: me.y1,
-//            x2: me.x2,
-//            y2: me.y2
-//        };
-//        
-//        me.addJSONDraw(result);
-//        me.addJSONFill(result);
-//        return result;
-//    }
-    
+
 }
 
 ClassManager.register(CalloutAnnotator.xtype, CalloutAnnotator);

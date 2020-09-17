@@ -22,7 +22,7 @@ export class FontToolbarItem extends AbstractPropToolbarItem{
     }
     
     public invoke(config: Config, selectedItems: Array<BaseAnnotator>) {
-        var me = this;
+        let me = this;
         if (!me.fontDialog) {
             me.fontDialog = new FontSelector(config);
         }

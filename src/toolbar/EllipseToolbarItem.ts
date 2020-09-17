@@ -15,7 +15,7 @@ export class EllipseToolbarItem extends AbstractToolbarItem {
     }
     
     public createAnnotator(config: InternalConfig, parent: AnnotatorContainer) : BaseAnnotator {
-        var ellipseAnnotator = new EllipseAnnotator(config, parent);
+        let ellipseAnnotator = new EllipseAnnotator(config, parent);
         
         return ellipseAnnotator;
     }

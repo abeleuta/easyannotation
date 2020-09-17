@@ -135,7 +135,7 @@ export class FontSelector extends BaseDialog {
     }
     
     private onButtonClick = (evt: Event) => {
-        var button = (evt.target as HTMLButtonElement);
+        let button = (evt.target as HTMLButtonElement);
         if (button.innerText == 'B') {
             this.font.bold = !this.font.bold;
             this.sampleTextDiv.style.fontWeight = this.font.bold ? 'bold' : 'normal';

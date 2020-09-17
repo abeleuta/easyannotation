@@ -24,7 +24,7 @@ export class FreeDrawToolbarItem extends AbstractToolbarPushItem {
     }
     
     public createAnnotator(config: InternalConfig, parent: AnnotatorContainer) : BaseStopableAnnotator {
-        var lastAnnotator = this.lastAnnotator;
+        let lastAnnotator = this.lastAnnotator;
         if (lastAnnotator) {
             lastAnnotator.stop();
             this.element.className = this.element.className.replace(' ' + config.ui + '-toolbar-item-pressed', '');
@@ -34,7 +34,7 @@ export class FreeDrawToolbarItem extends AbstractToolbarPushItem {
         }
         
         this.element.className += ' ' + config.ui + '-toolbar-item-pressed';
-        var freeDrawAnnotator = new FreeDrawAnnotator(config, parent);
+        let freeDrawAnnotator = new FreeDrawAnnotator(config, parent);
         this.lastAnnotator = freeDrawAnnotator;
         return freeDrawAnnotator;
     }

@@ -15,7 +15,7 @@ export class ImageToolbarItem extends AbstractToolbarItem {
     }
     
     public createAnnotator(config: InternalConfig, parent: AnnotatorContainer) : BaseAnnotator {
-        var imageAnnotator = new ImageAnnotator(config, parent);
+        let imageAnnotator = new ImageAnnotator(config, parent);
         
         return imageAnnotator;
     }

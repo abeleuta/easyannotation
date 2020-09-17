@@ -47,7 +47,7 @@ export class FreeDrawAnnotator extends BaseStopableAnnotator {
     }
     
     private initAnnotator = () => {
-        var me = this,
+        let me = this,
             parent = me.parent.getSVGContainer();
         me.rect = parent.getBoundingClientRect();
         if (Utils.isMobileDevice()) {
@@ -65,7 +65,7 @@ export class FreeDrawAnnotator extends BaseStopableAnnotator {
     }
     
     public stop() {
-        var me = this,
+        let me = this,
             parent = me.parent.getSVGContainer();
         
         if (Utils.isMobileDevice()) {
@@ -114,7 +114,7 @@ export class FreeDrawAnnotator extends BaseStopableAnnotator {
         }
         me.isDrawing = true;
         me.buffer = [];
-        var pt = me.getMousePosition(evt);
+        let pt = me.getMousePosition(evt);
         me.appendToBuffer(pt);
         me.points.push(pt);
         me.strPath += "M" + pt.x + " " + pt.y;
@@ -133,7 +133,7 @@ export class FreeDrawAnnotator extends BaseStopableAnnotator {
     private endDragging = (evt: MouseEvent | Touch) => {
         let me = this;
         me.isDrawing = false;
-        var pt = me.getMousePosition(evt);
+        let pt = me.getMousePosition(evt);
         me.appendToBuffer(pt);
         me.updateSvgPath();
         me.points.push(new Point(Number.NaN, Number.NaN));
@@ -143,8 +143,8 @@ export class FreeDrawAnnotator extends BaseStopableAnnotator {
     
     private getMousePosition = (e:MouseEvent | Touch) => {
         let rect = this.rect;
-        return new Point(e.pageX - rect.left - window.scrollX,
-                         e.pageY - rect.top - window.scrollY);
+        return new Point(Math.round(e.pageX - rect.left - window.scrollX),
+                         Math.round(e.pageY - rect.top - window.scrollY));
     }
     
     private appendToBuffer = (pt: Point) => {
@@ -158,12 +158,12 @@ export class FreeDrawAnnotator extends BaseStopableAnnotator {
     
 // Calculate the average point, starting at offset in the buffer
     private getAveragePoint = (offset: number) => {
-        var len = this.buffer.length;
+        let len = this.buffer.length;
         if (len % 2 === 1 || len >= this.bufferSize) {
-            var totalX = 0;
-            var totalY = 0;
-            var pt, i;
-            var count = 0;
+            let totalX = 0;
+            let totalY = 0;
+            let pt, i;
+            let count = 0;
             for (i = offset; i < len; i++) {
                 count++;
                 pt = this.buffer[i];
@@ -171,8 +171,8 @@ export class FreeDrawAnnotator extends BaseStopableAnnotator {
                 totalY += pt.y;
             }
             return {
-                x: totalX / count,
-                y: totalY / count
+                x: Math.round(totalX / count),
+                y: Math.round(totalY / count)
             }
         }
         return null;
@@ -189,8 +189,8 @@ export class FreeDrawAnnotator extends BaseStopableAnnotator {
 
             // Get the last part of the path (close to the current mouse position)
             // This part will change if the mouse moves again
-            var tmpPath = "", bufferLength = me.buffer.length;
-            for (var offset = 2; offset < bufferLength; offset += 2) {
+            let tmpPath = "", bufferLength = me.buffer.length;
+            for (let offset = 2; offset < bufferLength; offset += 2) {
                 pt = me.getAveragePoint(offset);
                 tmpPath += " L" + pt.x + " " + pt.y;
             }
@@ -219,11 +219,9 @@ export class FreeDrawAnnotator extends BaseStopableAnnotator {
         let xTransform = matrix.e,
             yTransform = matrix.f;
 
-
         let prevPoint: Point = null;
         for (let point of this.points) {
             if (isNaN(point.x)) {
-//                console.log('skip...');
                 prevPoint = null;
                 continue;
             }
@@ -258,7 +256,7 @@ export class FreeDrawAnnotator extends BaseStopableAnnotator {
     }
     
     public toXML() : Element {
-        var elem = document.createElementNS(null, FreeDrawAnnotator.xtype),
+        let elem = document.createElementNS(null, FreeDrawAnnotator.xtype),
             me = this;
         me.addDraw(elem);
         me.addFill(elem);

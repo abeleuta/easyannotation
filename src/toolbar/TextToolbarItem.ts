@@ -15,7 +15,7 @@ export class TextToolbarItem extends AbstractToolbarItem {
     }
     
     public createAnnotator(config: InternalConfig, parent: AnnotatorContainer) : BaseAnnotator {
-        var textAnnotator = new TextAnnotator(config, parent);
+        let textAnnotator = new TextAnnotator(config, parent);
         
         return textAnnotator;
     }

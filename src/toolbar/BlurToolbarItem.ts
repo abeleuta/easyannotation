@@ -15,7 +15,7 @@ export class BlurToolbarItem extends AbstractToolbarItem {
     }
     
     public createAnnotator(config: InternalConfig, parent: AnnotatorContainer) : BaseAnnotator {
-        var bluringAnnotator = new BlurAnnotator(config, parent);
+        let bluringAnnotator = new BlurAnnotator(config, parent);
         
         return bluringAnnotator;
     }

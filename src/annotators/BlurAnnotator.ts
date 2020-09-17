@@ -22,7 +22,7 @@ export class BlurAnnotator extends RectAnnotator {
     constructor(config: InternalConfig, parent: AnnotatorContainer) {
         super(config, parent);
         
-        var rectElement = this.baseSVGElement,
+        let rectElement = this.baseSVGElement,
             bluringFilter = document.createElementNS("http://www.w3.org/2000/svg", "filter"),
             idx = config.annotatorIdx + '_' + BlurAnnotator.BLURING_ID,
             id = 'bluringFilter' + idx;
@@ -80,9 +80,6 @@ export class BlurAnnotator extends RectAnnotator {
         imagePattern.setAttribute('x', (-transfromMatrix.e).toString());
         imagePattern.setAttribute('y', (-transfromMatrix.f).toString());
         
-//        me.baseSVGElement.setAttribute('filter', 'url(#' + bluringFilter.id + ')');
-//        me.baseSVGElement.setAttribute('fill', 'url(#' + imagePattern.id + ')');
-
     }
     
     public setDrawStyle(drawStyle: DrawStyle) {

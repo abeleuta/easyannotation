@@ -90,7 +90,7 @@ export class LineAnnotator extends BaseAnnotator {
     }
     
     protected onResizeTouchStart = (evt: TouchEvent) => {
-        var touches = evt.changedTouches[0];
+        let touches = evt.changedTouches[0];
         evt.preventDefault();
         this.onResizeDown(touches);
     }
@@ -112,7 +112,7 @@ export class LineAnnotator extends BaseAnnotator {
     }
 
     private onResizeDown = (evt: MouseEvent | Touch) => {
-        var me = this;
+        let me = this;
         me.currentResizeElement = evt.target as SVGGraphicsElement;
         me.screenX = evt.screenX;
         me.screenY = evt.screenY;
@@ -131,7 +131,7 @@ export class LineAnnotator extends BaseAnnotator {
     }
 
     public moveBy(dx: number, dy: number, evt: MouseEvent) {
-        var me = this,
+        let me = this,
             resizeElement = me.currentResizeElement,
             baseSVGElement = me.baseSVGElement,
             backLineSVG = me.backLineSVG;
@@ -139,7 +139,7 @@ export class LineAnnotator extends BaseAnnotator {
             if (resizeElement == this.resizeElement1) {
                 me.x1 = me.lineStartX + evt.screenX - me.screenX;
                 me.y1 = me.lineStartY + evt.screenY - me.screenY;
-                var _x1 = me.x1.toString(),
+                let _x1 = me.x1.toString(),
                     _y1 = me.y1.toString();
 
                 baseSVGElement.setAttribute('x1', _x1);
@@ -149,7 +149,7 @@ export class LineAnnotator extends BaseAnnotator {
             } else {
                 me.x2 = this.lineStartX + evt.screenX - me.screenX;
                 me.y2 = this.lineStartY + evt.screenY - me.screenY;
-                var _x2 = me.x2.toString(),
+                let _x2 = me.x2.toString(),
                     _y2 = me.y2.toString();
                 baseSVGElement.setAttribute('x2', _x2);
                 baseSVGElement.setAttribute('y2', _y2);
@@ -173,7 +173,7 @@ export class LineAnnotator extends BaseAnnotator {
 
     private arrangeResizeElements() {
 
-        var me = this,
+        let me = this,
             halfResizeElemeSize = me.RESIZE_ELEM_SIZE / 2;
 
         const x1 = me.x1 - halfResizeElemeSize;
@@ -425,7 +425,7 @@ export class LineAnnotator extends BaseAnnotator {
     }
 
     public toXML() : Element {
-        var elem = document.createElementNS(null, (<typeof LineAnnotator> this.constructor).xtype),
+        let elem = document.createElementNS(null, (<typeof LineAnnotator> this.constructor).xtype),
             me = this,
             matrix = this.svgGroupElement.transform.baseVal.getItem(0).matrix,
             dx = matrix.e,

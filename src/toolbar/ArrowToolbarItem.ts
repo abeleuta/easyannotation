@@ -15,7 +15,7 @@ export class ArrowToolbarItem extends AbstractToolbarItem {
     }
     
     public createAnnotator(config: InternalConfig, parent: AnnotatorContainer) : BaseAnnotator {
-        var lineAnnotator = new ArrowAnnotator(config, parent);
+        let lineAnnotator = new ArrowAnnotator(config, parent);
         
         return lineAnnotator;
     }

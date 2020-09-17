@@ -20,7 +20,7 @@ export class BlurPropsToolbarItem extends AbstractPropToolbarItem {
     }
     
     public invoke(config: InternalConfig, selectedItems: Array<BaseAnnotator>) {
-        var me = this;
+        let me = this;
         if (!me.blurDialog) {
             me.blurDialog = new BlurDialog(config);
         }

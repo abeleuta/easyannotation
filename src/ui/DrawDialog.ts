@@ -6,18 +6,12 @@ import DrawStyle from "../model/Styles"
 import {StrokeType} from "../model/Styles"
 import {AnnotationUtils} from "../utils/AnnotationUtils"
 import {BaseAnnotator} from "../annotators/BaseAnnotator"
-
-import '@simonwep/pickr/dist/themes/nano.min.css';      // 'nano' theme
-
-import Pickr from '@simonwep/pickr';
-//const Pickr = require('');
-//import Pickr from '@simonwep/pickr';
-//export default Pickr;
-//import Pickr from '@simonwep/pickr/dist/pickr.es5.min';
+import {ColorPicker} from "./ColorPicker"
+import {LineAnnotator} from "../annotators/LineAnnotator";
 
 export class DrawDialog extends BaseDialog {
     
-    private sampleDiv: SVGElement;
+    private sampleLine: SVGElement;
     
     private drawStyle: DrawStyle;
     
@@ -33,7 +27,7 @@ export class DrawDialog extends BaseDialog {
     
     private endArrowDropDown: DropDown;
     
-    private picker: PickrConf;
+    private picker: ColorPicker;
     
     private config: InternalConfig;
     
@@ -159,21 +153,10 @@ export class DrawDialog extends BaseDialog {
             }
         }
         
-        me.sampleDiv = sampleDiv.getElementsByTagName('line')[0] as SVGElement;
+        me.sampleLine = sampleDiv.getElementsByTagName('line')[0] as SVGElement;
 
-        let buttonsContainer = d.createElement('div');
-        buttonsContainer.className = 'btn-container';
-        el.appendChild(buttonsContainer);
+        this.addBaseButtons(el, okButton, cancelButton);
 
-        buttonsContainer.appendChild(okButton);
-        buttonsContainer.appendChild(cancelButton);
-        
-        okButton.className = 'button';
-        okButton.style.marginRight = '20px';
-        cancelButton.className = 'button';
-        okButton.innerHTML = 'OK';
-        cancelButton.innerHTML = 'Cancel';
-        
         let clickEventName = 'click';//Utils.isMobileDevice() ? 'tap' : 'click';
         okButton.addEventListener(clickEventName, me.onOKBtnClick);
         cancelButton.addEventListener(clickEventName, me.cancelBtnClick);
@@ -200,9 +183,12 @@ export class DrawDialog extends BaseDialog {
             color = '',
             startArrow = -1,
             endArrow = -1,
-            item;
+            item, numLines = 0;
             
         for (item of selectedItems) {
+            if (item instanceof LineAnnotator) {
+                numLines++;
+            }
             let itemDrawStyle = item.getDrawStyle(),
                 itemColor = itemDrawStyle.color;
             itemStrokeType = itemDrawStyle.type;
@@ -280,54 +266,11 @@ export class DrawDialog extends BaseDialog {
         me.endArrowDropDown.setSelectedIndex(endArrow);
         
         if (!me.picker) {
-            me.picker = ((window as any).Pickr || Pickr).create({
-                el: me.colorPickerDiv,//'.color-picker',
-                container: me.container,
-                theme: 'nano', // or 'monolith', or 'nano'
-
-                swatches: [
-                    'rgba(244, 67, 54, 1)',
-                    'rgba(233, 30, 99, 0.95)',
-                    'rgba(156, 39, 176, 0.9)',
-                    'rgba(103, 58, 183, 0.85)',
-                    'rgba(63, 81, 181, 0.8)',
-                    'rgba(33, 150, 243, 0.75)',
-                    'rgba(3, 169, 244, 0.7)',
-                    'rgba(0, 188, 212, 0.7)',
-                    'rgba(0, 150, 136, 0.75)',
-                    'rgba(76, 175, 80, 0.8)',
-                    'rgba(139, 195, 74, 0.85)',
-                    'rgba(205, 220, 57, 0.9)',
-                    'rgba(255, 235, 59, 0.95)',
-                    'rgba(255, 193, 7, 1)'
-                ],
-
-                components: {
-
-                    // Main components
-                    preview: true,
-                    opacity: true,
-                    hue: true,
-
-                    // Input / output Options
-                    interaction: {
-                        hex: false,
-                        rgba: false,
-                        hsla: false,
-                        hsva: false,
-                        cmyk: false,
-                        input: false,
-                        clear: false,
-                        save: true,
-                        cancel: true
-                    }
-                }
-            });
-
-            let pickr = (me.picker as PickrConf);
-            pickr.on('change', me.pickerColorChange);
-            pickr.on('save', me.pickerSave);
-            pickr.on('cancel', me.pickerSave);
+            me.picker = new ColorPicker(me.colorPickerDiv, me.config);
+            let colorPicker = me.picker;
+            colorPicker.on('change', me.pickerColorChange, me);
+            colorPicker.on('save', me.pickerColorSave, me);
+            colorPicker.on('cancel', me.pickerCancel, me);
         }
         
         if (color === '' || color == '-1') {
@@ -335,20 +278,30 @@ export class DrawDialog extends BaseDialog {
         }
         
         me.picker.setColor(color);
+
+        let arrowDisplay = numLines > 0 ? '' : 'none';
+        this.arrowStyleDiv.style.display = arrowDisplay;
+        this.startArrowDropDown.getElement().style.display = arrowDisplay;
+        this.endArrowDropDown.getElement().style.display = arrowDisplay;
     }
-    
-    private pickerSave = (color: HSVaColor) => {
-        this.picker.hide();
+
+    private pickerColorChange = (color: string) => {
+        let me = this;
+        me.drawStyle.color = color;
+        me.sampleLine.style.backgroundColor = color;
+        me.colorPickerDiv.style.backgroundColor = color;
     }
-    
-    private pickerColorChange = (color: HSVaColor) => {
-        var hexa = color.toHEXA(),
-            hexColor = '#' + hexa[0] + hexa[1] + hexa[2] + (hexa.length > 3 ? hexa[3] : '');
-        this.drawStyle.color = hexColor;
-        (this.container.querySelector('button.pcr-button') as HTMLButtonElement).style.color = hexColor;
-        this.sampleDiv.style.borderTopColor = hexColor;
+
+    private pickerColorSave = (color: string) => {
+        this.sampleLine.style.stroke = color;
+        this.pickerColorChange(color);
     }
-    
+
+    private pickerCancel = (originalColor: string) => {
+        this.pickerColorChange(originalColor);
+        this.colorPickerDiv.style.backgroundColor = originalColor;
+    }
+
     private onOKBtnClick = () => {
         let me = this;
         if (me.callback) {
@@ -362,7 +315,7 @@ export class DrawDialog extends BaseDialog {
     }
     
     private onLineStyleChange = (index: number) => {
-        let sampleDiv = this.sampleDiv,
+        let sampleDiv = this.sampleLine,
             strokeArray = 'none',
             strokeLineCap = 'unset';
             
@@ -388,7 +341,7 @@ export class DrawDialog extends BaseDialog {
     }
     
     private onLineWidthChange = (index: number) => {
-        let sampleDiv = this.sampleDiv,
+        let sampleDiv = this.sampleLine,
             widths = ['1', '2', '3', '5', '7', '10', '12', '15', '20', '25'];
         sampleDiv.style.strokeWidth = widths[index];
         this.drawStyle.width = parseInt(widths[index], 10);
@@ -410,13 +363,14 @@ export class DrawDialog extends BaseDialog {
         if (index > 0) {
             startMarker = 'url(#' + ((index == 1 || index == 2) && markerName == 'marker-start' ? 'start_':'') + 'sampleMarker_' + index + ')';
         }
-        this.sampleDiv.setAttribute(markerName, startMarker);
+        this.sampleLine.setAttribute(markerName, startMarker);
     }
     
     protected hideDialog = (evt: MouseEvent) => {
         let me = this;
         if (!me.drawStyleDropDown.isOpen() && !me.lineWidthDropDown.isOpen() &&
-            !me.startArrowDropDown.isOpen() && !me.endArrowDropDown.isOpen()) {
+            !me.startArrowDropDown.isOpen() && !me.endArrowDropDown.isOpen() &&
+            !this.picker.isVisible()) {
             super.hideDialog(evt);
         }
     }

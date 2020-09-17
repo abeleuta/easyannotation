@@ -80,7 +80,7 @@ export class BaseAnnotator {
     }
     
     protected init() {
-        var svgGroupElement = document.createElementNS("http://www.w3.org/2000/svg", "g"),
+        let svgGroupElement = document.createElementNS("http://www.w3.org/2000/svg", "g"),
             me = this;
         
 //        add a transform to list of transforms so we can move the element
@@ -113,7 +113,7 @@ export class BaseAnnotator {
     }
     
     protected onTouchStart = (evt: TouchEvent) => {
-        var touches = evt.changedTouches[0];
+        let touches = evt.changedTouches[0];
         evt.stopPropagation();
         this.setSelected(true);
         this.startDrag(touches.screenX, touches.screenY);
@@ -144,10 +144,11 @@ export class BaseAnnotator {
     
     protected onTouchMove = (evt: TouchEvent) => {
         let me = this;
-        evt.stopPropagation();
+        evt.stopImmediatePropagation();
         evt.preventDefault();
+        evt.stopPropagation();
         if (me.isDragging) {
-            var touches = evt.changedTouches[0];
+            let touches = evt.changedTouches[0];
             me.move(touches.screenX, touches.screenY, touches);
         }
     }
@@ -157,24 +158,18 @@ export class BaseAnnotator {
         if (me.isDragging) {
             evt.stopPropagation();
             let pixelRatio = this.getPixelRatio();
-//            console.log('ratio=' + pixelRatio);
             me.move(evt.screenX/pixelRatio, evt.screenY/pixelRatio, evt);
         }
     }
     
     private move(screenX:number, screenY: number, evt: MouseEvent | Touch) {
-        var me = this;
+        let me = this;
         const scale = me.svgGroupElement.getScreenCTM().a;
-//            ctm = me.svgGroupElement.getScreenCTM();
-//        console.log('CTM: a=' + ctm.a + ' b=' + ctm.b + ' c=' + ctm.c + ' d=' + ctm.d + ' e=' + ctm.e + ' f=' + ctm.f );
-//        console.log('zoom=' + Math.round((document.documentElement.offsetHeight / window.innerHeight) * 100) / 100);
         me.moveBy((screenX - me.startX)/scale, (screenY - me.startY)/scale, evt);
     }
     
     public moveBy(dx: number, dy: number, evt: MouseEvent | Touch) {
         let moveTransform = this.svgGroupElement.transform.baseVal.getItem(0);
-//        this.log('matrix: a=' + this.elementMatrix.a + ' b=' + this.elementMatrix.b + 
-//            ' c=' + this.elementMatrix.c + ' d=' + this.elementMatrix.d + ' e=' + this.elementMatrix.e);
         moveTransform.setMatrix(this.elementMatrix.translate(dx, dy));
         
         this.svgGroupElement.transform.baseVal.replaceItem(moveTransform, 0);
@@ -260,7 +255,6 @@ export class BaseAnnotator {
                 break;
         }
         
-//        console.log(strokeArray);
         elemStyle.strokeDasharray = strokeArray;
         elemStyle.strokeLinecap = strokeLineCap;
     }
@@ -447,8 +441,7 @@ export class BaseAnnotator {
             opacity: me.getXMLNumber(element, 'op')
         } as FillStyle);
         for(let filterID in me.filters) {
-            console.log('filterID...');
-            var filterElement = document.createElement('f');
+            let filterElement = document.createElement('f');
             filterElement.setAttribute('i', filterID);
             filterElement.setAttribute('v', me.filters[filterID]);
             element.appendChild(filterElement);

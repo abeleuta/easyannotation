@@ -1,0 +1,35 @@
+import { RectAnnotator } from "./RectAnnotator";
+import InternalConfig from "../utils/InternalConfig";
+import { AnnotatorContainer } from "../AnnotatorContainer";
+import { Font } from "../model/Font";
+import FillStyle from "../model/Styles";
+import DrawStyle from "../model/Styles";
+export declare class TextAnnotator extends RectAnnotator {
+    static readonly xtype: string;
+    private foreignObject;
+    private editorTextArea;
+    private currentText;
+    private selectedRect;
+    private lastTouchTime;
+    readonly INITIAL_HEIGHT = 40;
+    constructor(config: InternalConfig, parent: AnnotatorContainer);
+    protected initElement(config: InternalConfig): void;
+    private createText;
+    setSelected(selected: boolean): void;
+    protected onTouchStart: (evt: TouchEvent) => void;
+    private onTextClick;
+    private addEditor;
+    private saveEditText;
+    private hideEditor;
+    setFillStyle(fillStyle: FillStyle): void;
+    setText(text: string): void;
+    private setSelRectSize;
+    setDrawStyle(drawStyle: DrawStyle): void;
+    setStrokeWidth(width: number): void;
+    setFont(font: Font): void;
+    toXML(): Element;
+    fromXML(element: Element): void;
+    toJSON(): Object;
+    fromJSON(obj: any): void;
+    clean(): void;
+}

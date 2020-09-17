@@ -11,6 +11,8 @@ export class BlurDialog extends BaseDialog {
     private sampleDiv: HTMLElement;
     
     private blurSlider: HTMLInputElement;
+
+    private blurLabel: HTMLLabelElement;
     
     private transparencySlider: HTMLInputElement;
     
@@ -32,12 +34,14 @@ export class BlurDialog extends BaseDialog {
         container.appendChild(bodyDiv);
         container.className = config.ui + '-dialog';
 
-        bodyDiv.style.height = '120px';
+        bodyDiv.style.height = '80px';
         
         let label = d.createElement('label');
         label.className = 'label';
         label.innerHTML = 'Blur Radius';
         bodyDiv.appendChild(label);
+
+        this.blurLabel = label;
         
         let blurSlider = d.createElement('input');
         blurSlider.className = 'slider transparency';
@@ -75,8 +79,7 @@ export class BlurDialog extends BaseDialog {
         transparencySlider.addEventListener('mousemove', me.onBlurChange);
 
         bodyDiv.appendChild(transparencySlider);
-//        me.height = 175;
-        
+
         let sampleDiv = d.createElement('div');
         
         bodyDiv.appendChild(sampleDiv);
@@ -92,25 +95,9 @@ export class BlurDialog extends BaseDialog {
             }
         }
         
-//        let easyAnnotatorSVGContainer = d.getElementById('easyAnnotatorSVGContainer') as Element,
-//            mainPattern = easyAnnotatorSVGContainer.getElementById('');
-//        sampleDiv.style.backgroundImage = 'url("' + config.;
-        
-        me.sampleDiv = sampleDiv;
-        
-        let buttonsContainer = d.createElement('div');
-        buttonsContainer.className = 'btn-container';
-        container.appendChild(buttonsContainer);
+        this.sampleDiv = sampleDiv;
+        this.addBaseButtons(container, okButton, cancelButton);
 
-        buttonsContainer.appendChild(okButton);
-        buttonsContainer.appendChild(cancelButton);
-        
-        okButton.className = 'button';
-        okButton.style.marginRight = '20px';
-        cancelButton.className = 'button';
-        okButton.innerHTML = 'OK';
-        cancelButton.innerHTML = 'Cancel';
-        
         okButton.addEventListener('click', me.onOKBtnClick);
         cancelButton.addEventListener('click', me.cancelBtnClick);
         
@@ -172,19 +159,13 @@ export class BlurDialog extends BaseDialog {
         let me = this,
             isPhone = Utils.isPhone();
         
+        me.transparencySlider.style.display = showOpacity ? 'block' : 'none';
+        me.transparencyLabel.style.display = showOpacity ? 'block' : 'none';
+        me.blurSlider.style.display = showOpacity ?  'none' : 'block';
+        me.blurLabel.style.display = showOpacity ?  'none' : 'block';
+
         if (showOpacity) {
-            me.transparencySlider.style.display = 'block';
             me.transparencySlider.value = opacity;
-            me.transparencyLabel.style.display = 'block';
-            if (!isPhone) {
-                me.container.style.height = '180px';
-            }
-        } else{
-            me.transparencySlider.style.display = 'none';
-            me.transparencyLabel.style.display = 'none';
-            if (!isPhone) {
-                me.container.style.height = '150px';
-            }
         }
         
         me.blurSlider.value = blur;

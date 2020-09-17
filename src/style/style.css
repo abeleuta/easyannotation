@@ -221,6 +221,9 @@
     -o-user-select: none;
     -webkit-user-select: none;
     user-select: none;
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    color: #666;
 }
 
 .default-dialog .slider {
@@ -380,7 +383,7 @@
 }
 
 .default-drop-down .options-container .option > * {
-    margin: 5px auto;
+    margin: 3px auto;
     float: none;
     width: 85%;
 }
@@ -409,16 +412,16 @@
     margin-top: 5px;
 }
 
-.pickr {
-    width: 150px !important;
-    height: 26px !important;
-    border: 1px solid #c8c8c8 !important;
-    margin-top: 5px !important;
-}
+/*.pickr {*/
+/*    width: 150px !important;*/
+/*    height: 26px !important;*/
+/*    border: 1px solid #c8c8c8 !important;*/
+/*    margin-top: 5px !important;*/
+/*}*/
 
-.pickr button {
-    width: 100% !important;
-}
+/*.pickr button {*/
+/*    width: 100% !important;*/
+/*}*/
 
 .fill-pattern1 {
     background-image: url("data:image/svg+xml;utf8,<svg width='12px' height='20px' viewBox='0 0 12 20' version='1.1' xmlns='http://www.w3.org/2000/svg'><line stroke='black' x1='0' y1='20' x2='12' y2='0'/></svg>");
@@ -796,4 +799,139 @@
 .default-toolbar-item svg line, .default-toolbar-item svg path, .default-toolbar-item svg ellipse, .default-toolbar-item svg rect {
     fill: url(#easyAnnotatorBtnGradient) #447799;
     stroke: url(#easyAnnotatorBtnGradient) #447799;
+}
+
+.ea-color-picker {
+    opacity: 0;
+    display: none;
+    z-index: 100000;
+    position: fixed;
+    border-radius: 3px;
+    background-color: #fff;
+    width: 230px;
+    height: 280px;
+    top: 0;
+    left: 0;
+    border: 1px solid #E1E1E1;
+}
+
+.ea-picker-visible {
+    display: block;
+    transition: opacity .3s;
+    opacity: 1;
+}
+
+.ea-color-picker .ea-color-selection {
+    width: 100%;
+}
+
+.ea-color-picker .ea-palette-container {
+    width: 100%;
+    position: relative;
+}
+
+.ea-color-picker .ea-palette {
+    background: linear-gradient(to top, rgb(0, 0, 0), transparent) repeat scroll 0% 0%, rgba(0, 0, 0, 0) linear-gradient(to left, rgb(0, 255, 129), rgb(255, 255, 255)) repeat scroll 0% 0%;
+    height: 125px;
+}
+
+.ea-color-picker .ea-palette:before,
+.ea-color-picker .ea-swatches-panel > div:before {
+    position: absolute;
+    content: "";
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('data:image/svg+xml;utf8, <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2 2"><path fill="white" d="M1,0H2V1H1V0ZM0,1H1V2H0V1Z"/><path fill="gray" d="M0,0H1V1H0V0ZM1,1H2V2H1V1Z"/></svg>');
+    background-size: auto;
+    background-size: .5em;
+    border-radius: .15em;
+    z-index: -1;
+}
+
+.ea-color-picker .ea-picker {
+    position: absolute;
+    height: 15px;
+    width: 15px;
+    border: 2px solid #fff;
+    border-radius: 100%;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.ea-color-picker .ea-selection-bottom {
+    width: 100%;
+    height: 60px;
+}
+
+.ea-color-picker .ea-color-sample {
+    float: left;
+    width: 2em;
+    height: 2em;
+    border-radius: 50em;
+    margin: 7px;
+}
+
+.ea-color-picker .ea-color-chooser {
+    height: 7px;
+    width: 155px;
+    float: left;
+    margin: 12px 0 0 10px;
+    position: relative;
+}
+
+.ea-color-picker .ea-slider {
+    height: 8px;
+    background: linear-gradient(90deg,red,#ff0,#0f0,#0ff,#00f,#f0f,red);
+    border-radius: 3px;
+}
+
+.ea-color-picker .ea-transparency {
+    background: linear-gradient(90deg,transparent,#000),url('data:image/svg+xml;utf8, <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2 2"><path fill="white" d="M1,0H2V1H1V0ZM0,1H1V2H0V1Z"/><path fill="gray" d="M0,0H1V1H0V0ZM1,1H2V2H1V1Z"/></svg>');
+    background-size: auto, auto;
+    background-size: 100%,.25em;
+}
+
+.ea-color-picker .ea-slider-picker {
+    top: -4px;
+    width: 13px;
+    height: 13px;
+    background-color: #fff;
+    border: 1px solid #808080;
+}
+
+.ea-picker-target {
+    cursor: pointer;
+}
+
+.ea-color-picker .ea-swatches-panel {
+    width: 100%;
+    height: 60px;
+    padding-left: 10px;
+}
+
+.ea-color-picker .ea-swatches-panel > div {
+    width: 23px;
+    height: 23px;
+    position: relative;
+    float: left;
+    margin: 3px;
+    cursor: pointer;
+}
+
+.ea-color-picker .ea-swatches-panel > div:before {
+    background-size: 6px;
+    border-radius: 2px;
+}
+
+.ea-color-picker .ea-picker-buttons {
+    width: 100%;
+    text-align: center;
+}
+
+.ea-color-picker .ea-picker-buttons button{
+    width: 80px;
 }

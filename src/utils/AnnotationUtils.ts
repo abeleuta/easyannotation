@@ -16,7 +16,7 @@ export class AnnotationUtils {
     }
     
     private static getSVGElement(config: InternalConfig): SVGSVGElement {
-        var svgElements = document.getElementsByTagName('svg'),
+        let svgElements = document.getElementsByTagName('svg'),
             mainSvgElement = null,
             annotatorContainerID = 'easyAnnotatorSVGContainer' + config.annotatorIdx;
         if (svgElements.length) {

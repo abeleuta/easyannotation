@@ -14,7 +14,7 @@ export class CalloutToolbarItem extends AbstractToolbarItem {
     }
     
     public createAnnotator(config: InternalConfig, parent: AnnotatorContainer) : BaseAnnotator {
-        var lineAnnotator = new CalloutAnnotator(config, parent);
+        let lineAnnotator = new CalloutAnnotator(config, parent);
         
         return lineAnnotator;
     }

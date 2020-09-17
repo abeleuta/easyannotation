@@ -26,14 +26,14 @@ Include code:
 ### Example
 
 ```javascript
-  new easyannotation.AnnotatorContainer(document.getElementById('inputImage')).show(function(res) {
+  new easyannotation.AnnotatorContainer(document.querySelector('#inputImage')).show(function(res) {
       //process result when user press Save
-      document.getElementById('sample4Res').src = res;
+      document.querySelector('#sample4Res').src = res;
   });
 ```
 ## Options
 ```javascript
-  new easyannotation.AnnotatorContainer(document.getElementById('inputImage'), {
+  new easyannotation.AnnotatorContainer(document.querySelector('#inputImage'), {
      
      // optional target element to place the EasyAnnotation container.
      // If not specified container will be placed on document.body element.
@@ -72,7 +72,7 @@ Include code:
 
      //default fill style for shapes that can be filled, the following options can be used:
      fillStyle: {
-          fillType: 0 // a number between 0 and 9 defining the fill type. 
+          fillType: 0, // a number between 0 and 9 defining the fill type. 
                       // If 0 is specified, elements will fill with solid background.
           opacity: 100,  // default opacity fill for components, 100 - opaque, 0 - transparent
           color: '#000' // default fill color
@@ -82,6 +82,8 @@ Include code:
      y: null, //y position based on target element
      width: null, //with of the container element. If not specified defaults to image width.
      height: null, //height of the container element. If not specified defaults to image height.
+  
+     loadOnClick: boolean, //if true, annotator will load when user click or tap on the image element
 
      showToolbar: true, //true to show annotation toolbar
      showProperties: true, // true to show properties toolbar
@@ -131,7 +133,7 @@ Include code:
     
   }).show(function(res) {
       //process result when user press Save
-      document.getElementById('sample4Res').src = res;
+      document.querySelector('#sample4Res').src = res;
   });
 ```
 

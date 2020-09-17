@@ -8,7 +8,7 @@ export class BaseDialog {
     public static getOpenDialog() {
         return this.openDialog;
     }
-    
+
     protected container: HTMLDivElement;
     
     protected callback: (res: Object) => void;
@@ -27,8 +27,6 @@ export class BaseDialog {
         element.style.display = 'block';
         if (isMobile) {
             element.classList.add('ea-mobile-dialog');
-//            element.style.height = w.screen.height + 'px';
-//            element.style.width = w.screen.width + 'px';
             element.addEventListener('touchmove', me.onTouchMove);
             window.addEventListener('orientationchange', me.orientationChange);
         } else {
@@ -64,13 +62,11 @@ export class BaseDialog {
         let target = evt.target as HTMLElement,
             dialogContainer = this.container;
         while (target) {
-//            console.log(target.innerHTML);
-//            console.log('-------------------------------------------------');
             if (target == dialogContainer) {
                 return;
             }
             let cls = target.className;
-            if ((typeof (cls) === 'string') && (cls.indexOf('pcr-selection') >= 0 || cls.indexOf('pcr-app') >= 0)) {
+            if ((typeof (cls) === 'string') && cls.indexOf('ea-color-picker') >= 0) {
 //                color pallet click
                 return;
             }
@@ -89,6 +85,21 @@ export class BaseDialog {
             window.removeEventListener('click', me.hideDialog);
         }
         me.container.parentElement.removeChild(me.container);//.style.display = 'none';
+    }
+
+    protected addBaseButtons(container: HTMLDivElement, okButton: HTMLButtonElement, cancelButton: HTMLButtonElement) {
+        let buttonsContainer = document.createElement('div');
+        buttonsContainer.className = 'btn-container';
+        container.appendChild(buttonsContainer);
+
+        buttonsContainer.appendChild(okButton);
+        buttonsContainer.appendChild(cancelButton);
+
+        okButton.className = 'button';
+        okButton.style.marginRight = '20px';
+        cancelButton.className = 'button';
+        okButton.innerHTML = 'OK';
+        cancelButton.innerHTML = 'Cancel';
     }
     
 }

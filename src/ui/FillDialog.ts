@@ -8,10 +8,7 @@ import Effect from "../model/Styles"
 import {BaseAnnotator} from "../annotators/BaseAnnotator"
 import { TextAnnotator } from "../annotators/TextAnnotator"
 import { Utils } from "../utils/Utils"
-
-import '@simonwep/pickr/dist/themes/nano.min.css';      // 'nano' theme
-
-import Pickr from '@simonwep/pickr';
+import {ColorPicker} from "./ColorPicker";
 
 export class FillDialog extends BaseDialog {
     
@@ -29,7 +26,7 @@ export class FillDialog extends BaseDialog {
     
     private fillPatternLabel: HTMLLabelElement;
     
-    private picker: PickrConf;
+    private picker: ColorPicker;
     
     private opacitySlider: HTMLInputElement;
     
@@ -144,31 +141,14 @@ export class FillDialog extends BaseDialog {
         
         me.sampleDiv = sampleDiv;
 
-        let buttonsContainer = d.createElement('div');
-        buttonsContainer.className = 'btn-container';
-        container.appendChild(buttonsContainer);
+        this.addBaseButtons(container, okButton,cancelButton);
 
-        buttonsContainer.appendChild(okButton);
-        buttonsContainer.appendChild(cancelButton);
-        
-        okButton.className = 'button';
-        okButton.style.marginRight = '20px';
-        cancelButton.className = 'button';
-        okButton.innerHTML = 'OK';
-        cancelButton.innerHTML = 'Cancel';
-        
         let clickEventName = 'click';//Utils.isMobileDevice() ? 'tap' : 'click';
         okButton.addEventListener(clickEventName, me.onOKBtnClick);
         cancelButton.addEventListener(clickEventName, me.cancelBtnClick);
         
         me.container = container;
         
-//        this.onLineStyleChange(fillStyle.type);
-//        if (selectedIndex >= 0) {
-//            lineWidthDropDown.setSelectedIndex(selectedIndex);
-//            this.onLineWidthChange(selectedIndex);
-//        }
-
     }
         
     public show(target: HTMLElement, selectedItems: Array<BaseAnnotator>, callback: (res: Object) => void) {
@@ -265,56 +245,11 @@ export class FillDialog extends BaseDialog {
         }
         
         if (!me.picker) {
-            me.picker = ((window as any).Pickr || Pickr).create({
-                el: me.colorPickerDiv,//'.color-picker',
-                container: me.container,
-                theme: 'nano', // or 'monolith', or 'nano'
-                
-                default: color,
-
-                swatches: [
-                    'rgba(244, 67, 54, 1)',
-                    'rgba(233, 30, 99, 0.95)',
-                    'rgba(156, 39, 176, 0.9)',
-                    'rgba(103, 58, 183, 0.85)',
-                    'rgba(63, 81, 181, 0.8)',
-                    'rgba(33, 150, 243, 0.75)',
-                    'rgba(3, 169, 244, 0.7)',
-                    'rgba(0, 188, 212, 0.7)',
-                    'rgba(0, 150, 136, 0.75)',
-                    'rgba(76, 175, 80, 0.8)',
-                    'rgba(139, 195, 74, 0.85)',
-                    'rgba(205, 220, 57, 0.9)',
-                    'rgba(255, 235, 59, 0.95)',
-                    'rgba(255, 193, 7, 1)'
-                ],
-
-                components: {
-
-                    // Main components
-                    preview: true,
-                    opacity: true,
-                    hue: true,
-
-                    // Input / output Options
-                    interaction: {
-                        hex: false,
-                        rgba: false,
-                        hsla: false,
-                        hsva: false,
-                        cmyk: false,
-                        input: false,
-                        clear: false,
-                        save: true,
-                        cancel: true
-                    }
-                }
-            });
-
-            let pickr = me.picker;
-            pickr.on('change', me.pickerColorChange);
-            pickr.on('save', me.pickerSave);
-            pickr.on('cancel', me.pickerSave);
+            me.picker = new ColorPicker(me.colorPickerDiv, this.config);
+            let colorPicker = me.picker;
+            colorPicker.on('change', me.pickerColorChange, me);
+            colorPicker.on('save', me.pickerSave, me);
+            colorPicker.on('cancel', me.pickerCancel, me);
         }
         
         if (fillPattern < 0) {
@@ -338,35 +273,32 @@ export class FillDialog extends BaseDialog {
         me.effectsDropDown.setSelectedIndex(0, blurIndex);
         me.effectsDropDown.setSelectedIndex(1, shadowIndex);
         
-//        console.log('opacity=' + opacity);
         me.opacitySlider.value = opacity.toString();
         me.fillStyle.color = color;
         me.picker.setColor(color);
+
+        me.colorPickerDiv.style.backgroundColor = color;
         me.sampleDiv.style.backgroundColor = color;
 //        if there are only Text elements, hide Fill
         let patternDisplayMode = numTextElements == selectedItems.length ? 'none' : '';
         me.fillPatternDropDown.getElement().style.display = patternDisplayMode;
         me.fillPatternLabel.style.display = patternDisplayMode;
     }
-    
-    private pickerSave = (color: HSVaColor) => {
-        this.picker.hide();
+
+    private pickerSave = (color: string) => {
+        let me = this;
+        me.fillStyle.color = color;
+        me.sampleDiv.style.backgroundColor = color;
     }
-    
-    private pickerColorChange = (color: HSVaColor) => {
-        var hexa = color.toHEXA(),
-            me = this,
-            hexColor = '#' + hexa[0] + hexa[1] + hexa[2] + (hexa.length > 3 ? hexa[3] : '');
-//        console.log('color changed to:' + hexColor);
-        me.fillStyle.color = hexColor;
-        (me.container.querySelector('button.pcr-button') as HTMLButtonElement).style.color = hexColor;
-        me.sampleDiv.style.backgroundColor = hexColor;
-//        this.sampleDiv.style.borderTopColor = hexColor;
-//        if (me.fillStyle.fillType > 0) {
-//            me.sampleDiv.style.backgroundImage = 'url("data:image/svg+xml;utf8,<svg width=\'12px\' height=\'20px\' viewBox=\'0 0 12 20\' version=\'1.1\' xmlns=\'http://www.w3.org/2000/svg\'><line stroke=\'black\' x1=\'0\' y1=\'5\' x2=\'12\' y2=\'5\'/><line stroke=\'' + hexColor + '\' x1=\'0\' y1=\'15\' x2=\'12\' y2=\'15\'/></svg>")';
-////            me.sampleDiv.style.backgroundImage.replace('black', hexColor);
-//        } else {
-//        }
+
+    private pickerCancel = (originalColor: string) => {
+        this.pickerSave(originalColor);
+        this.colorPickerDiv.style.backgroundColor = originalColor;
+    }
+
+    private pickerColorChange = (color: string) => {
+        this.colorPickerDiv.style.backgroundColor = color;
+        this.fillStyle.color = color;
     }
     
     private onOKBtnClick = () => {
@@ -396,7 +328,7 @@ export class FillDialog extends BaseDialog {
         
         me.fillStyle.effects = effects ? effects : null;
         me.fillStyle.opacity = parseInt(me.opacitySlider.value, 10);
-//        console.log('OK color=' + me.fillStyle.color);
+
         if (me.callback) {
             me.callback(me.fillStyle);
         }
@@ -456,7 +388,9 @@ export class FillDialog extends BaseDialog {
     }
     
     protected hideDialog = (evt: MouseEvent) => {
-        if (!this.fillPatternDropDown.isOpen() && !this.effectsDropDown.isOpen()) {
+        if (!this.fillPatternDropDown.isOpen() &&
+            !this.effectsDropDown.isOpen() &&
+            !this.picker.isVisible()) {
             super.hideDialog(evt);
         }
     }

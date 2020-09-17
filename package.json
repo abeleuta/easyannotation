@@ -1,6 +1,6 @@
 {
     "name": "easyannotation",
-    "version": "1.0.1",
+    "version": "1.0.4",
     "main": "easyannotation.js",
     "module": "easyannotation.es.js",
     "description": "Image annotation in JavaScript",
@@ -21,9 +21,8 @@
     "author": "Andrei Beleuta",
     "contributors": [],
     "types": "typings/index.d.ts",
-    "dependencies": {
-        "@simonwep/pickr": "^1.4.5"
-    },
+    "homepage": "http://easyannotation.com/",
+    "repository": "https://github.com/abeleuta/easyannotation",
     "devDependencies": {
         "rollup-plugin-commonjs": "^10.1.0",
         "rollup-plugin-livereload": "^1.0.4",
@@ -43,7 +42,6 @@
         "rollup-plugin-terser": "^5.1.2",
         "rollup-plugin-typescript2": "^0.24.3",
         "typescript": "^3.6.3",
-        "vanilla-picker": "^2.10.0",
         "xmldom": "^0.1.27"
     }
 }

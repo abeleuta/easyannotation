@@ -49,7 +49,7 @@ export class EllipseAnnotator extends BaseAnnotator {
 
     private createEllipse(config: InternalConfig) {
 
-        var ellipseSVG = document.createElementNS("http://www.w3.org/2000/svg", "ellipse"),
+        let ellipseSVG = document.createElementNS("http://www.w3.org/2000/svg", "ellipse"),
             me = this;
 
         ellipseSVG.setAttribute('cx', '0');
@@ -61,8 +61,8 @@ export class EllipseAnnotator extends BaseAnnotator {
         me.baseSVGElement = ellipseSVG;
 
         me.resizeElements = new Array();
-        for (var i = 0; i < 4; i++) {
-            var resizeEl = me.createResizeElement(config);
+        for (let i = 0; i < 4; i++) {
+            let resizeEl = me.createResizeElement(config);
             me.resizeElements.push(resizeEl);
             me.addResizeEvents(resizeEl);
             me.svgGroupElement.appendChild(resizeEl);
@@ -79,7 +79,7 @@ export class EllipseAnnotator extends BaseAnnotator {
     }
 
     protected onResizeTouchStart = (evt: TouchEvent) => {
-        var touches = evt.changedTouches[0];
+        let touches = evt.changedTouches[0];
         this.onResizeDown(touches);
     }
     
@@ -96,7 +96,7 @@ export class EllipseAnnotator extends BaseAnnotator {
 
         me.dragStartRx = me.rx;
         me.dragStartRy = me.ry;
-        for(var i=0;i<numResizeElements;i++) {
+        for(let i=0;i<numResizeElements;i++) {
             if (resizeElem == me.resizeElements[i]) {
                 me.currentResizeIndex = i;
                 me.dragStartX = me.cx;
@@ -111,10 +111,10 @@ export class EllipseAnnotator extends BaseAnnotator {
     }
 
     public moveBy(dx: number, dy: number, evt: MouseEvent | Touch) {
-        var me = this,
+        let me = this,
             resizeIndex = me.currentResizeIndex;
         if (resizeIndex >= 0) {
-            var difX = evt.screenX - me.screenX,
+            let difX = evt.screenX - me.screenX,
                 difY = evt.screenY - me.screenY;
             switch (resizeIndex) {
                 case 0:
@@ -161,7 +161,7 @@ export class EllipseAnnotator extends BaseAnnotator {
     }
 
     private arrangeResizeElements() {
-        var halfResizeElemeSize = this.RESIZE_ELEM_SIZE / 2;
+        let halfResizeElemeSize = this.RESIZE_ELEM_SIZE / 2;
         //        top - left
         this.arrangeElement(this.resizeElements[0], this.cx - this.rx - halfResizeElemeSize, this.cy - this.ry - halfResizeElemeSize);
         //        top - right
@@ -200,7 +200,7 @@ export class EllipseAnnotator extends BaseAnnotator {
         if (fillType == 0) {
             me.baseSVGElement.style.fill = me.fillStyle.color;
         } else {
-            var fillPattern = AnnotationUtils.createFillPattern(me.config, fillType, me.fillPattern);
+            let fillPattern = AnnotationUtils.createFillPattern(me.config, fillType, me.fillPattern);
             fillPattern.style.stroke = me.fillStyle.color;
             fillPattern.style.fill = me.fillStyle.color;
             me.fillPattern = fillPattern;
@@ -212,7 +212,7 @@ export class EllipseAnnotator extends BaseAnnotator {
         let me = this;
         if (me.selected != selected) {
             super.setSelected(selected);
-            for (var i = 0; i < 4; i++) {
+            for (let i = 0; i < 4; i++) {
                 me.resizeElements[i].style.display = selected ? '' : 'none';
             }
         }
@@ -301,7 +301,7 @@ export class EllipseAnnotator extends BaseAnnotator {
     }
     
     public toXML() : Element {
-        var elem = document.createElementNS(null, EllipseAnnotator.xtype),
+        let elem = document.createElementNS(null, EllipseAnnotator.xtype),
             me = this,
             matrix = me.svgGroupElement.transform.baseVal.getItem(0).matrix,
             dx = matrix.e,
@@ -320,7 +320,7 @@ export class EllipseAnnotator extends BaseAnnotator {
     public fromXML(element: Element) {
         let me = this,
             getValidNumber = function(val: string) {
-                var num = parseInt(val, 10);
+                let num = parseInt(val, 10);
                 if (isNaN(num) || num < 0) {
                     num = 0;
                 }

@@ -1,0 +1,23 @@
+{
+  "name": "easyannotation",
+  "version": "1.0.4",
+  "main": "easyannotation.js",
+  "module": "easyannotation.es.js",
+  "description": "Image annotation in JavaScript",
+  "keywords": [
+    "annotate",
+    "mark",
+    "free draw",
+    "highlight",
+    "image",
+    "photo",
+    "comment",
+    "image"
+  ],
+  "scripts": {},
+  "author": "Andrei Beleuta",
+  "contributors": [],
+  "types": "typings/index.d.ts",
+  "homepage": "http://easyannotation.com/",
+  "repository": "https://github.com/abeleuta/easyannotation"
+}
