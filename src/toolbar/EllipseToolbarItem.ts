@@ -5,7 +5,7 @@ import {BaseAnnotator} from "../annotators/BaseAnnotator"
 import {EllipseAnnotator} from "../annotators/EllipseAnnotator"
 import {AnnotatorContainer} from "../AnnotatorContainer"
 
-import CircleIcon from "../icons/circle.svg"
+var CircleIcon = require("../icons/circle.svg") as string
 
 export class EllipseToolbarItem extends AbstractToolbarItem {
     

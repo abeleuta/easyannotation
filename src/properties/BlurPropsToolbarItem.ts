@@ -7,7 +7,8 @@ import {BaseAnnotator} from "../annotators/BaseAnnotator"
 import {Constants} from "../utils/Constants"
 
 import {BlurDialog} from "../ui/BlurDialog"
-import BlurSettingsIcon from "../icons/cog-solid.svg"
+
+var BlurSettingsIcon = require("../icons/cog-solid.svg") as string
 
 export class BlurPropsToolbarItem extends AbstractPropToolbarItem {
     

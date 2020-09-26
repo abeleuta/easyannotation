@@ -37,8 +37,8 @@ import {ClassManager} from "./utils/ClassManager"
 import {AnnotationUtils} from "./utils/AnnotationUtils"
 import {Utils} from "./utils/Utils"
 
-import EraseIcon from "./icons/eraser-solid.svg"
-import SaveIcon from "./icons/save-solid.svg"
+var EraseIcon = require("./icons/eraser-solid.svg") as string
+var SaveIcon = require("./icons/save-solid.svg") as string
 
 export const enum ExportType {
     XML = 0,

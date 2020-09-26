@@ -5,7 +5,7 @@ import {BaseStopableAnnotator} from "../annotators/BaseStopableAnnotator"
 import {FreeDrawAnnotator} from "../annotators/FreeDrawAnnotator"
 import {AnnotatorContainer} from "../AnnotatorContainer"
 
-import FreeDrawIcon from "../icons/free-draw.svg"
+var FreeDrawIcon = require("../icons/free-draw.svg") as string
 
 export class FreeDrawToolbarItem extends AbstractToolbarPushItem {
     

@@ -5,7 +5,7 @@ import FillStyle from "../model/Styles"
 import {FillDialog} from "../ui/FillDialog"
 import {Constants} from "../utils/Constants"
 
-import FillColor from "../icons/color.svg"
+var FillColor = require("../icons/color.svg") as string
 
 export class FillToolbarItem extends AbstractPropToolbarItem {
     

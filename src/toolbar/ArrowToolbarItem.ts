@@ -5,7 +5,7 @@ import {BaseAnnotator} from "../annotators/BaseAnnotator"
 import {ArrowAnnotator} from "../annotators/ArrowAnnotator"
 import {AnnotatorContainer} from "../AnnotatorContainer"
 
-import ArrowIcon from "../icons/arrow.svg"
+var ArrowIcon = require("../icons/arrow.svg") as string
 
 export class ArrowToolbarItem extends AbstractToolbarItem {
     

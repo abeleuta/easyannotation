@@ -5,7 +5,7 @@
         "noImplicitAny": true,
         "lib": ["es2015", "dom"],
         "target": "es5",
-	"allowSyntheticDefaultImports": true,
+	    "allowSyntheticDefaultImports": true,
         "declaration": true,
         "declarationDir": "./dist/typings/",
         "downlevelIteration": true

@@ -4,7 +4,7 @@ import {AbstractToolbarPushItem} from "./AbstractToolbarPushItem"
 import {Utils} from "../utils/Utils"
 import {BaseDialog} from "../ui/BaseDialog"
 
-import MoreIcon from "../icons/more.svg"
+var MoreIcon = require("../icons/more.svg") as string
 
 export class Toolbar {
     
@@ -80,7 +80,7 @@ export class Toolbar {
                 me.submenuContainer.style.display = 'none';
             }
         };
-        
+
         if (toolbarItem.iconSVG) {
             element.innerHTML = toolbarItem.iconSVG;
         } else if (toolbarItem.iconURL) {

@@ -5,7 +5,7 @@ import {BaseAnnotator} from "../annotators/BaseAnnotator"
 import {LineAnnotator} from "../annotators/LineAnnotator"
 import {AnnotatorContainer} from "../AnnotatorContainer"
 
-import LineIcon from "../icons/line.svg"
+var LineIcon = require("../icons/line.svg") as string
 
 export class LineToolbarItem extends AbstractToolbarItem {
     

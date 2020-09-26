@@ -1,0 +1,11 @@
+# Dependency directories
+node_modules/
+jspm_packages/
+
+.idea
+dev
+rollup
+tsconfig*
+src
+webpack*
+tslint*

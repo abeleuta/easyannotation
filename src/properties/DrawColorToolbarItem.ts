@@ -2,7 +2,8 @@ import Config from "../Config"
 
 import {AbstractPropToolbarItem} from "./AbstractPropToolbarItem"
 import {BaseAnnotator} from "../annotators/BaseAnnotator"
-import Pencil from "../icons/pencil-alt-solid.svg"
+
+var Pencil = require("../icons/pencil-alt-solid.svg") as string
 
 export class DrawColorToolbarItem extends AbstractPropToolbarItem{
     
