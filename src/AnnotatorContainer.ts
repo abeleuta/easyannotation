@@ -39,6 +39,7 @@ import {Utils} from "./utils/Utils"
 
 var EraseIcon = require("./icons/eraser-solid.svg") as string
 var SaveIcon = require("./icons/save-solid.svg") as string
+var CloseIcon = require("./icons/close.svg") as string
 
 export const enum ExportType {
     XML = 0,
@@ -677,7 +678,15 @@ export class AnnotatorContainer {
                         iconSVG: SaveIcon,
                         title: 'Save changes and close annotator'
                     }];
+                if (config.showClose === true) {
+                    toolbarItems.push({
+                        itemId: 'close',
+                        iconSVG: CloseIcon,
+                        title: 'Close Annotator'
+                    });
+                }
             } else {
+                let haveClose = false;
                 for(let i in toolbarItems) {
                     let item = toolbarItems[i];
                     let xtype = item.xtype;
@@ -719,9 +728,24 @@ export class AnnotatorContainer {
                                     item.iconSVG = SaveIcon;
                                 }
                                 break;
+                            case 'close':
+                                haveClose = true;
+                                if (!item.iconSVG) {
+                                    item.iconSVG = CloseIcon;
+                                }
+                                break;
                         }
                     }
                 }
+
+                if (config.showClose === true && !haveClose) {
+                    toolbarItems.push({
+                        itemId: 'close',
+                        iconSVG: CloseIcon,
+                        title: 'Close Annotator'
+                    });
+                }
+
             }
             me.toolbar = new Toolbar(me.config, toolbarItems, me.toolbarItemClickHandler, me);
         }
@@ -785,9 +809,17 @@ export class AnnotatorContainer {
                 me.pushedAnnotator.stop();
                 me.pushedAnnotator = null;
             }
-            switch (item.itemId) {
+
+            let itemId = item.itemId;
+            if (itemId === undefined) {
+                itemId = item.xtype;
+            }
+            switch (itemId) {
                 case 'delete':
                     me.deleteSelection();
+                    break;
+                case 'close':
+                    me.close();
                     break;
                 case 'save':
                     me.save(function(data) {
@@ -926,7 +958,19 @@ export class AnnotatorContainer {
     }
     
     public close() {
-        
+        this.targetElement.removeChild(this.container);
+        if (this.isImageElement) {
+            this.imageElement.style.visibility = 'visible';
+        }
+
+        let targetElement = this.config.targetElement
+        if (this.toolbar) {
+            targetElement.removeChild(this.toolbar.getContainer());
+        }
+
+        if (this.propertiesToolbar) {
+            targetElement.removeChild(this.propertiesToolbar.getContainer());
+        }
     }
     
     public save(callback: (data: string) => void, exportType? : ExportType): void {

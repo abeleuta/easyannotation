@@ -21,6 +21,9 @@ export default interface Config {
 
   //if true, annotator will load when user click or tap on the image element
   loadOnClick: boolean;
+
+  //if true, close button will show
+  showClose: boolean;
   
   x? : number;
   y?: number;

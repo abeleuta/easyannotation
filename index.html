@@ -4,19 +4,38 @@
         <title>TODO supply a title</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <script src="dist/easyannotation.js"></script>
+        <script src="./dist/easyannotation.min.js"></script>
         <script>
             window.onload = function() {
                 var easyMarker1 = new easyannotation.AnnotatorContainer(
 					document.querySelector('#hallstattImg'), {
 						style: 'border: 1px solid #909090',
-					});
+						showClose: true,
+						toolbarItems: [
+							{
+								xtype: 'delete',
+								title: 'Delete selected or all elements'
+							},
+							new easyannotation.TextToolbarItem(),
+							new easyannotation.LineToolbarItem(),
+							new easyannotation.ArrowToolbarItem(),
+							new easyannotation.EllipseToolbarItem(),
+							new easyannotation.RectToolbarItem(),
+							new easyannotation.CalloutToolbarItem(),
+							new easyannotation.ImageToolbarItem(),
+							new easyannotation.BlurToolbarItem(),
+							{
+								itemId: 'save',
+								xtype: 'save',
+								title: 'Save changes and close annotator'
+							}]
+						});
 
                 var easyMarkerRes = new easyannotation.AnnotatorContainer(document.querySelector('#hallstattImgRes'), {
 					style: 'border: 1px solid #909090'
 					});
 
-		easyMarker1.show(function(dataUrl){
+		easyMarker1.show(function(dataUrl) {
 			easyMarkerRes.clear();
 			easyMarkerRes.loadJSON(dataUrl);
 		}, easyannotation.ExportType.JSON);//JSON);
@@ -33,10 +52,10 @@
 		<table style="width:1200px;">
 			<tr>
 				<td>
-					<img style="margin-top: 50px;/*width:225px;height:121px;*/" id="hallstattImg" src="Hallstat.jpg"/>
+					<img style="margin-top: 50px;/*width:225px;height:121px;*/" id="hallstattImg" src="dev/Hallstat.jpg"/>
 				</td>
 				<td>
-					<img style="margin-top: 50px;/*width:225px;height:121px;*/" id="hallstattImgRes" src="Hallstat.jpg"/>
+					<img style="margin-top: 50px;/*width:225px;height:121px;*/" id="hallstattImgRes" src="dev/Hallstat.jpg"/>
 				</td>
 			</tr>
 			<tr>

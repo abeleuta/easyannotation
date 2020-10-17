@@ -9,8 +9,8 @@ import {Constants} from "../utils/Constants"
 
 import {ClassManager} from "../utils/ClassManager"
 
-import AcceptIcon from "../icons/accept.svg"
-import CloseIcon from "../icons/close.svg"
+var AcceptIcon = require("../icons/accept.svg") as string
+var CloseIcon = require("../icons/close.svg") as string
 
 export class TextAnnotator extends RectAnnotator {
     

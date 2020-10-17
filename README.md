@@ -85,6 +85,8 @@ Include code:
   
      loadOnClick: boolean, //if true, annotator will load when user click or tap on the image element
 
+     showClose: boolean,//if true, close button will show
+
      showToolbar: true, //true to show annotation toolbar
      showProperties: true, // true to show properties toolbar
 
