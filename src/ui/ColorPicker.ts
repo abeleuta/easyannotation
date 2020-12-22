@@ -501,7 +501,8 @@ export class ColorPicker {
         this.setColorInternal((evt.target as HTMLElement).getAttribute('data-color'));
     }
 
-    private onSave = () => {
+    private onSave = (evt: Event) => {
+        evt.stopPropagation();
         let color = this.color;
         this.originalColor = color;
         if (this.alpha < 255 && color.length == 7) {
@@ -510,14 +511,18 @@ export class ColorPicker {
         for(let l of this.listeners.save) {
             l.fn.call(l.caller, color);
         }
-        this.hide();
+        setTimeout(function(picker) {
+            picker.hide();
+        }, 100, this);
     }
 
     private onCancel = () => {
         for(let l of this.listeners.cancel) {
             l.fn.call(l.caller, this.originalColor);
         }
-        this.hide();
+        setTimeout(function(picker) {
+            picker.hide();
+        }, 100, this);
     }
 
     public isVisible = () => {

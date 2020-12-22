@@ -365,6 +365,8 @@ export class AnnotatorContainer {
                 if (target instanceof Element) {
                     let cls = target.classList;
                     if (cls.contains(ui + '-dialog') ||
+                        cls.contains(ui + '-toolbar') ||
+                        cls.contains(ui + '-toolbar-item') ||
                         cls.contains('ea-color-picker')) {
                         return;
                     }
