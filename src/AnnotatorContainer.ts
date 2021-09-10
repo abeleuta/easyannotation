@@ -193,8 +193,7 @@ export class AnnotatorContainer {
         }
         
         (internalConfig as InternalConfig).annotatorIdx = AnnotationUtils.getNextAnnotatorIdx();
-        // (internalConfig as InternalConfig).sizePercentage = Math.max(0.25, Math.min(1, width / 800));
-        
+
         me.config = internalConfig as InternalConfig;
         let confDrawStyle = config.drawStyle,
             confFillStyle = config.fillStyle;
@@ -530,9 +529,6 @@ export class AnnotatorContainer {
     private doLayout() {
         let me = this,
             containerRect = me.isImageElement ? me.imageElement.getBoundingClientRect() : me.container.getBoundingClientRect(),
-//            containerParentRect = me.targetElement.parentElement.getBoundingClientRect(),
-            width = me.width,
-            toolbarWidth = 0,
             buttonsToolbarWidth = 0,
             propertiesToolbarWidth = 0,
             numToolbarButtons = 0,
@@ -623,32 +619,6 @@ export class AnnotatorContainer {
         
         me.container.style.top = toolbarTop + 'px';
         me.container.style.left = toolbarLeft + 'px';
-        
-//        if (toolbarWidth > width - 20) {
-//            let perc = (width - 20) / toolbarWidth,
-//                buttonWidth,
-//                toolbarContainer = me.toolbar.getContainer();
-//            
-//                console.log('perc=' + perc + ' buttonsToolbarWidth=' + buttonsToolbarWidth);
-//                
-//            if (buttonsToolbarWidth > 0) {
-//                let currentLeft = parseInt(toolbarContainer.style.left, 10) + buttonsToolbarWidth;
-//                buttonsToolbarWidth *= perc; 
-//                currentLeft -= buttonsToolbarWidth;
-//                console.log('after buttonsToolbarWidth=' + buttonsToolbarWidth);
-//                buttonWidth = buttonsToolbarWidth / toolbarContainer.childNodes.length;
-//                toolbarContainer.style.width = buttonsToolbarWidth + 'px';
-//                toolbarContainer.style.left = currentLeft + 'px';
-//                console.log('buttonWidth=' + buttonWidth);
-//            }
-//            
-//            if (propertiesToolbarWidth > 0) {
-//                propertiesToolbarWidth *= perc;
-//                me.propertiesToolbar.getContainer().style.width = propertiesToolbarWidth+ 'px';
-//            }
-//            
-//        }
-
     }
     
     private initToolbar() {
@@ -956,7 +926,6 @@ export class AnnotatorContainer {
             defs.removeChild(lastDefs);
             lastDefs = defs.lastChild;
         }
-//        this.defs.innerHTML = '';
     }
     
     public close() {
@@ -964,6 +933,8 @@ export class AnnotatorContainer {
         if (this.isImageElement) {
             this.imageElement.style.visibility = 'visible';
         }
+
+        window.removeEventListener('resize', this.onResize);
 
         let targetElement = this.config.targetElement
         if (this.toolbar) {
@@ -1020,16 +991,6 @@ export class AnnotatorContainer {
             if (newAnnotator instanceof BaseStopableAnnotator) {
                 (newAnnotator as BaseStopableAnnotator).stop();
             }
-//            if (newAnnotator) {
-//                let element = firstChild as Element;
-//                newAnnotator.moveBy(me.width / 2, me.height / 2, null);
-//                newAnnotator.fromXML(element);
-////                newAnnotator.setSelected(false);
-//                me._addElement(newAnnotator, null, null);
-//                if (newAnnotator instanceof BaseStopableAnnotator) {
-//                    (newAnnotator as BaseStopableAnnotator).stop();
-//                }
-//            }
             firstChild = firstChild.nextSibling;
         }
     }
