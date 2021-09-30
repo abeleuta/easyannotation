@@ -1,6 +1,6 @@
 {
     "name": "easyannotation",
-    "version": "1.0.8",
+    "version": "1.0.10",
     "main": "./dist/easyannotation.min.js",
     "module": "./dist/easyannotation.min.js",
     "description": "Image annotation in JavaScript",

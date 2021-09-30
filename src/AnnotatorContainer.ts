@@ -403,9 +403,17 @@ export class AnnotatorContainer {
     
     private addListeners() {
         let svgContainer = this.svgContainer;
-        svgContainer.addEventListener('mousemove', this.onMouseMove);
-        svgContainer.addEventListener('mousedown', this.onMouseDown);
-        svgContainer.addEventListener('mouseup', this.onMouseUp);
+
+        if (Utils.isMobileDevice()) {
+            svgContainer.addEventListener('touchstart', this.onTouchStart);
+            svgContainer.addEventListener('touchmove', this.onTouchMove);
+            svgContainer.addEventListener('touchend', this.onMouseUp);
+        } else {
+            svgContainer.addEventListener('mousedown', this.onMouseDown);
+            svgContainer.addEventListener('mousemove', this.onMouseMove);
+            svgContainer.addEventListener('mouseup', this.onMouseUp);
+        }
+
     }
     
     startDrag(x: number, y: number) {
@@ -414,9 +422,15 @@ export class AnnotatorContainer {
         me.startY = y;
         me.isDragging = true;
     }
+
+    private onTouchMove = (evt: TouchEvent) => {
+        if (evt.touches.length) {
+            this.onMouseMove(evt.touches[0]);
+        }
+    }
     
-    private onMouseMove = (evt: MouseEvent) => {
-        if ((evt.buttons & 1) > 0) {
+    private onMouseMove = (evt: MouseEvent | Touch) => {
+        if ((evt instanceof Touch) || (evt.buttons & 1) > 0) {
             let me = this,
                 selectedItems = me.selectedItems,
                 dx = evt.screenX - me.startX,
@@ -472,8 +486,14 @@ export class AnnotatorContainer {
             }
         }
     }
+
+    private onTouchStart = (evt: TouchEvent) => {
+        if (evt.touches.length) {
+            this.onMouseDown(evt.touches[0]);
+        }
+    }
     
-    private onMouseDown = (evt: MouseEvent) => {
+    private onMouseDown = (evt: MouseEvent | Touch) => {
         let me = this,
             selectBounds = me.selectPos,
             selectRect = me.selectRect,
@@ -481,8 +501,7 @@ export class AnnotatorContainer {
             atLeastOneIntersection = false,
             clientX = evt.clientX - svgBounds.left,
             clientY = evt.clientY - svgBounds.top;
-        
-            
+
         selectBounds.x = clientX;
         selectBounds.y = clientY;
         
@@ -514,7 +533,7 @@ export class AnnotatorContainer {
         }
         me.deselectAll();
     }
-    
+
     private onMouseUp = (evt: MouseEvent) => {
         let me = this;
         me.isDragging = false;
