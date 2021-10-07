@@ -42,7 +42,8 @@ export class FreeDrawToolbarItem extends AbstractToolbarPushItem {
     public setPushed(pushed: boolean) {
         let me = this,
             element = me.element,
-            ui = this.config.ui,
+            config = this.config,
+            ui = config ? config.ui : 'default',
             className = element.className;
         me.pushed = pushed;
         if (pushed) {

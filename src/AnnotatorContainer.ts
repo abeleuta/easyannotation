@@ -430,7 +430,8 @@ export class AnnotatorContainer {
     }
     
     private onMouseMove = (evt: MouseEvent | Touch) => {
-        if ((evt instanceof Touch) || (evt.buttons & 1) > 0) {
+        let isTouchEvent = window.Touch && (evt instanceof Touch);
+        if (isTouchEvent || ((evt instanceof MouseEvent) && (evt.buttons) & 1) > 0) {
             let me = this,
                 selectedItems = me.selectedItems,
                 dx = evt.screenX - me.startX,
