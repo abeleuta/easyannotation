@@ -58,7 +58,7 @@ export class DrawDialog extends BaseDialog {
         
         let label = d.createElement('label');
         label.className = 'label';
-        label.innerHTML = 'Line Style';
+        label.innerHTML = config.translations && config.translations.lineStyle ? config.translations.lineStyle : 'Line Style';
         bodyDiv.appendChild(label);
         
         let drawStyleDropDown = new DropDown(config, [
@@ -73,7 +73,7 @@ export class DrawDialog extends BaseDialog {
         
         label = d.createElement('label');
         label.className = 'label';
-        label.innerHTML = 'Width';
+        label.innerHTML = config.translations && config.translations.drawLineWidth ? config.translations.drawLineWidth : 'Width';
         bodyDiv.appendChild(label);
         
         let allWidths = [1, 2, 3, 5, 7, 10, 12, 15, 20, 25], i = 0,
@@ -94,7 +94,7 @@ export class DrawDialog extends BaseDialog {
         this.arrowStyleDiv = d.createElement('div');
         label = d.createElement('label');
         label.className = 'label';
-        label.innerHTML = 'Arrow';
+        label.innerHTML = config.translations && config.translations.drawLineArrow ? config.translations.drawLineArrow : 'Arrow';
         this.arrowStyleDiv.appendChild(label);
         
         let arrowStartOptions = new Array<string>(),
@@ -124,7 +124,8 @@ export class DrawDialog extends BaseDialog {
         
         label = d.createElement('label');
         label.className = 'label';
-        label.innerHTML = 'Color';
+
+        label.innerHTML = config.translations && config.translations.color ? config.translations.color : 'Color';
         bodyDiv.appendChild(label);
         
         let colorPickerDiv = d.createElement('div');
@@ -278,6 +279,7 @@ export class DrawDialog extends BaseDialog {
         }
         
         me.picker.setColor(color);
+        this.sampleLine.style.stroke = color;
 
         let arrowDisplay = numLines > 0 ? '' : 'none';
         this.arrowStyleDiv.style.display = arrowDisplay;

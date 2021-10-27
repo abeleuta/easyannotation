@@ -62,8 +62,8 @@ export class FontSelector extends BaseDialog {
         italicButton.style.fontStyle = 'italic';
         boldButton.className = 'button hover-button';
         italicButton.className = 'button hover-button';
-        
-        label.innerHTML = 'Font';
+
+        label.innerHTML = config.translations && config.translations.textFont ? config.translations.textFont : 'Font';
         label.htmlFor = fontDropDown.id;
         bodyDiv.appendChild(label);
         bodyDiv.appendChild(fontDropDown);
@@ -80,7 +80,7 @@ export class FontSelector extends BaseDialog {
         this.fontSizeDropDown = fontSizeDropDown;
         
         label = d.createElement('label');
-        label.innerHTML = 'Size';
+        label.innerHTML = config.translations && config.translations.textSize ? config.translations.textSize : 'Size';
         fontSizeContainer.appendChild(label);
         let dropDownElement = fontSizeDropDown.getElement();
         dropDownElement.style.marginLeft = '11px';
@@ -161,5 +161,9 @@ export class FontSelector extends BaseDialog {
         this.font.name = fontName;
         this.sampleTextDiv.style.fontFamily = fontName;
     }
-       
+
+    protected hideDialog = (evt: MouseEvent) => {
+        super.hideDialog(evt);
+    }
+
 }

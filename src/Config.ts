@@ -15,6 +15,10 @@ export default interface Config {
   ui: string;
   
   font: Font;
+
+  defaultText?: string;
+
+  translations?: any;
   
   drawStyle: DrawStyle;
   fillStyle: FillStyle;

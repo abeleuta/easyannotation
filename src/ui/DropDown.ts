@@ -86,12 +86,12 @@ export class DropDown {
                         }
                         let subOptionElement = d.createElement('div');
                         subOptionElement.setAttribute('optIndex', subIndex.toString());
-                        subOptionElement.setAttribute('optValue', subOptions);
+                        subOptionElement.setAttribute('optValue', typeof(subOptions) === 'string' ? subOptions : subOptions.value);
                         subOptionElement.className = 'option';
                         if (isPhone) {
                             subOptionElement.classList.add("mobile-sub-option");
                         }
-                        subOptionElement.innerHTML = '<div class="padding"></div>' + subOptions + '<div class=""></div>';
+                        subOptionElement.innerHTML = '<div class="padding"></div>' + (typeof(subOptions) === 'string' ? subOptions : subOptions.html) + '<div class=""></div>';
                         if (isMobileDevice) {
                             subOptionElement.addEventListener('touchend', me.selectOption,  { passive: false });
                         } else {

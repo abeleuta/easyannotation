@@ -62,15 +62,18 @@ export class FillDialog extends BaseDialog {
         container.className = config.ui + '-dialog';
 
         bodyDiv.style.height = '180px';
-        
+        bodyDiv.style.width = '350px';
+
         let label = d.createElement('label');
         label.className = 'label';
-        label.innerHTML = 'Fill Pattern';
+
+        label.innerHTML = config.translations && config.translations.fillPattern ? config.translations.fillPattern : 'Fill Pattern';
         me.fillPatternLabel = label;
         bodyDiv.appendChild(label);
         
         let dropdownOptions = ['<div style="height:20px;background:#000;"></div>'], i;
-        for(i=1;i<10;i++) {
+
+        for (i = 1; i < 10; i++) {
             dropdownOptions.push('<div class="fill-pattern' + i + '" style="height:20px;"></div>');
         }
         
@@ -83,7 +86,7 @@ export class FillDialog extends BaseDialog {
 
         label = d.createElement('label');
         label.className = 'label';
-        label.innerHTML = 'Color';
+        label.innerHTML = config.translations && config.translations.color ? config.translations.color : 'Color';
         bodyDiv.appendChild(label);
         
         let colorPickerDiv = d.createElement('div');
@@ -94,7 +97,7 @@ export class FillDialog extends BaseDialog {
 
         label = d.createElement('label');
         label.className = 'label';
-        label.innerHTML = 'Transparency';
+        label.innerHTML = config.translations && config.translations.transparency ? config.translations.transparency : 'Transparency';
         bodyDiv.appendChild(label);
         
         let opacitySlider = d.createElement('input');
@@ -112,16 +115,20 @@ export class FillDialog extends BaseDialog {
         
         label = d.createElement('label');
         label.className = 'label';
-        label.innerHTML = 'Effects';
+
+        label.innerHTML = config.translations && config.translations.fillEffects ? config.translations.fillEffects : 'Effects';
         bodyDiv.appendChild(label);
 
-        let blurDropDownOptions = ['<div>Blur</div>', '<div class="blur-option blur-none">None<div></div></div>'], 
+        let blurDropDownOptions = ['<div>Blur</div>', '<div class="blur-option blur-none">None<div></div></div>'] as Array<any>,
             blurPx = ['1px', '2px', '5px', '10px', '20px', '50px'],
             filterOptions = FillDialog.BLUR_OPTIONS,
             shadowOptions = ['<div>Shadow</div>', 'None'];
         for(i in blurPx) {
-            blurDropDownOptions.push('<div class="blur-option">' + blurPx[i] + 
-            '<div style="filter:blur(' + filterOptions[i] + ')"></div></div>');
+            blurDropDownOptions.push({
+                html: '<div class="blur-option">' + blurPx[i] +
+                    '<div style="filter:blur(' + filterOptions[i] + ')"></div></div>',
+                value: blurPx[i]
+            });
         }
         
         shadowOptions = shadowOptions.concat(FillDialog.SHADOW_OPTIONS);
@@ -309,16 +316,16 @@ export class FillDialog extends BaseDialog {
 
         if (blurIndex > 0) {
             let blurValue = '';
-            if (blurIndex < FillDialog.BLUR_OPTIONS.length) {
-                blurValue = FillDialog.BLUR_OPTIONS[blurIndex];
+            if (blurIndex <= FillDialog.BLUR_OPTIONS.length) {
+                blurValue = FillDialog.BLUR_OPTIONS[blurIndex - 1];
             }
             effects = [{effectType: EffectType.BLUR, index: blurIndex, value: blurValue} as Effect];
         }
 
         if (shadowIndex > 0) {
             let shadowValue = '';
-            if (shadowIndex < FillDialog.SHADOW_OPTIONS.length) {
-                shadowValue = FillDialog.SHADOW_OPTIONS[shadowIndex];
+            if (shadowIndex <= FillDialog.SHADOW_OPTIONS.length) {
+                shadowValue = FillDialog.SHADOW_OPTIONS[shadowIndex - 1];
             }
             if (effects == null) {
                 effects = [];

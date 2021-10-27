@@ -30,7 +30,10 @@ export class TextAnnotator extends RectAnnotator {
     
     constructor(config: InternalConfig, parent: AnnotatorContainer) {
         super(config, parent);
-        
+
+        if (config.defaultText) {
+            this.currentText = config.defaultText;
+        }
         this.width = 80;
         this.height = this.INITIAL_HEIGHT;
         this.x = 0;

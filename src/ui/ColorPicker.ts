@@ -511,8 +511,8 @@ export class ColorPicker {
         for(let l of this.listeners.save) {
             l.fn.call(l.caller, color);
         }
-        setTimeout(function(picker) {
-            picker.hide();
+        setTimeout(() => {
+            this.hide();
         }, 100, this);
     }
 
@@ -520,8 +520,8 @@ export class ColorPicker {
         for(let l of this.listeners.cancel) {
             l.fn.call(l.caller, this.originalColor);
         }
-        setTimeout(function(picker) {
-            picker.hide();
+        setTimeout(() => {
+            this.hide();
         }, 100, this);
     }
 

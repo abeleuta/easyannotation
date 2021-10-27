@@ -38,7 +38,7 @@ export class BlurDialog extends BaseDialog {
         
         let label = d.createElement('label');
         label.className = 'label';
-        label.innerHTML = 'Blur Radius';
+        label.innerHTML = config.translations && config.translations.blurRadius ? config.translations.blurRadius : 'Blur Radius';
         bodyDiv.appendChild(label);
 
         this.blurLabel = label;
@@ -60,7 +60,7 @@ export class BlurDialog extends BaseDialog {
         
         label = d.createElement('label');
         label.className = 'label';
-        label.innerHTML = 'Transparency';
+        label.innerHTML = config.translations && config.translations.transparency ? config.translations.transparency : 'Transparency';
         bodyDiv.appendChild(label);
         
         me.transparencyLabel = label;
@@ -189,7 +189,7 @@ export class BlurDialog extends BaseDialog {
     private cancelBtnClick = () => {
         this.hide();
     }
-    
+
     protected hideDialog = (evt: MouseEvent) => {
         super.hideDialog(evt);
     }

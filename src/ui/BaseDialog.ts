@@ -38,11 +38,11 @@ export class BaseDialog {
             element.style.height = me.height + 'px';
         }
         
-        setTimeout(function() {
+        setTimeout(() => {
             if (Utils.isMobileDevice()) {
-                window.addEventListener('touchstart', me.hideDialog);
+                window.addEventListener('touchstart', this.hideDialog);
             } else {
-                window.addEventListener('click', me.hideDialog);
+                window.addEventListener('click', this.hideDialog);
             }
         }, 500);
     }
@@ -57,7 +57,7 @@ export class BaseDialog {
     private onTouchMove = (evt: TouchEvent) => {
         evt.preventDefault();
     }
-    
+
     protected hideDialog (evt: MouseEvent) {
         let target = evt.target as HTMLElement,
             dialogContainer = this.container;
@@ -72,7 +72,7 @@ export class BaseDialog {
             }
             target = target.parentElement;
         }
-        
+
         this.hide();
     }
     

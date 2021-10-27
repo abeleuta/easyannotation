@@ -78,7 +78,7 @@ export class AnnotationUtils {
         bluringFilter.setAttribute('height', '200%');
         bluringFilter.setAttribute('x', '-50%');
         bluringFilter.setAttribute('y', '-50%');
-        bluringFilter.innerHTML = '<feGaussianBlur stdDeviation="' + parseInt(effect.value,10) + '"/>';
+        bluringFilter.innerHTML = '<feGaussianBlur stdDeviation="' + parseFloat(effect.value) + '"/>';
         AnnotationUtils.addToDefs(config, bluringFilter);
 
         return bluringFilter;
@@ -87,7 +87,6 @@ export class AnnotationUtils {
     public static createShadowFilter(config: InternalConfig, effect: Effect, blurEffect?: Effect) {
         let bluringFilter = document.createElementNS("http://www.w3.org/2000/svg", "filter");
         bluringFilter.setAttribute('id', 'blurFilter_' + config.annotatorIdx + '_' + this.filterIdx++);
-//        bluringFilter.setAttribute('filterUnits', 'userSpaceOnUse');
         bluringFilter.setAttribute('width', '200%');
         bluringFilter.setAttribute('height', '200%');
         bluringFilter.setAttribute('x', '-50%');
@@ -101,7 +100,7 @@ export class AnnotationUtils {
     }
     
     public static setShadowFilterValue(bluringFilter: SVGFilterElement, shadowEffect: Effect, blurEffect?: Effect) {
-        let shadowValue = parseInt(shadowEffect.value,10),
+        let shadowValue = parseFloat(shadowEffect.value),
             shadowHTML = '';
         if (blurEffect) {
             shadowHTML = '<feGaussianBlur in="SourceGraphic" stdDeviation="' + parseInt(blurEffect.value, 10) + '" result="DROPBLUR"></feGaussianBlur>';
@@ -120,7 +119,7 @@ export class AnnotationUtils {
             <feMergeNode in="FINALHADOW"></feMergeNode>\
             <feMergeNode in="' + (blurEffect ? 'DROPBLUR': 'SourceGraphic') + '"></feMergeNode>\
         </feMerge>';
-        
+
         bluringFilter.innerHTML = shadowHTML;
     }
     
@@ -205,7 +204,8 @@ export class AnnotationUtils {
                     marker.setAttribute('refX', '1');
                     headSVGElement.setAttribute("points", '6,1 0 4 6,7');
                 } else {
-                    headSVGElement.setAttribute('points', '1 3.5 6,1 6,7');
+                    // headSVGElement.setAttribute('points', '1 3.5 6,1 6,7');
+                    headSVGElement.setAttribute('points', '1,7 6,4 1,1');
                     //headSVGElement.setAttribute("points", '0 1 6,4 0,7');
                 }
                 headAdditionalCls = ' arrow-no-fill';

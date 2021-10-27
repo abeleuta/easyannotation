@@ -132,6 +132,23 @@ Include code:
      //Hide original image element. 
      //If false, image element won't be hidden and EasyAnnotation container will be placed above the original image
      hideElement: true,
+
+    // default text to show when users adds a new Text annotator
+    // by default this is "Text" string
+    defaultText: null,
+    
+    //an optional object with label translations. 
+    // The following are the keys and default values for dialog labels.
+    // * color - 'Color'
+    // * transparency - 'Transparency'
+    // * blurRadius - 'Blur Radius'
+    // * lineStyle - 'Line Style'
+    // * drawLineWidth - 'Width'
+    // * fillPattern - 'Fill Pattern'
+    // * fillEffects - 'Effects'
+    // * textFont - 'Font'
+    // * textSize - 'Size'
+     translations: null
     
   }).show(function(res) {
       //process result when user press Save

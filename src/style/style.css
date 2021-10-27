@@ -189,6 +189,7 @@
     text-align: center;
     max-height: 80px;
     overflow: hidden;
+    white-space: nowrap;
 }
 
 .default-dialog div.button {
@@ -348,6 +349,7 @@
 
 .subdrop-down .option {
     padding-left: 3px;
+    position: relative;
 }
 
 .option .checked {
@@ -356,7 +358,9 @@
     background-position: -20px -18px;
     width: 18px !important;
     height: 18px;
-    float: right !important;
+    position: absolute;
+    right: 1px;
+    top: 2px;
 }
 
 .default-drop-down .options-container {
