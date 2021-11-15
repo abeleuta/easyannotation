@@ -8,7 +8,8 @@ module.exports = {
     filename: 'easyannotation.min.js',
     libraryTarget: 'umd',
     library: 'easyannotation',
-    umdNamedDefine: true
+    umdNamedDefine: true,
+    libraryExport: 'default'
   },
   optimization: {
     minimize: true

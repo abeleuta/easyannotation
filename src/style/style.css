@@ -92,6 +92,16 @@
     opacity: 0.8;
 }
 
+.annotator-rotate-dash-line {
+    stroke-width: 0.8;
+    stroke: #000;
+    stroke-dasharray: 4;
+}
+.annotator-rotate-element {
+    fill: #e0e0e0;
+    stroke: #545454;
+    stroke-width: 6px;
+}
 
 .default-annotator-line {
     stroke-width: 2;

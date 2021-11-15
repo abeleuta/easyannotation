@@ -421,6 +421,7 @@ export class AnnotatorContainer {
         me.startX = x;
         me.startY = y;
         me.isDragging = true;
+        console.log('start drag, x=', x);
     }
 
     private onTouchMove = (evt: TouchEvent) => {
@@ -436,9 +437,12 @@ export class AnnotatorContainer {
                 selectedItems = me.selectedItems,
                 dx = evt.screenX - me.startX,
                 dy = evt.screenY - me.startY;
+
+            console.log('!!!!!!move, dx=', dx);
+
             if (me.isDragging && selectedItems.length) {
                 for (let item of me.selectedItems) {
-                    item.moveBy(dx, dy, evt);
+                    // item.moveBy(dx, dy, evt);
                 }
             } else if (!me.pushedAnnotator) {
                 let selectRect = me.selectRect,
