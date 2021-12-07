@@ -25,7 +25,7 @@
     "repository": "https://github.com/abeleuta/easyannotation",
     "devDependencies": {
         "typescript": "^3.6.3",
-        "xmldom": "^0.1.27",
+        "xmldom": "^0.6.0",
         "rollup-plugin-commonjs": "^10.1.0",
         "rollup-plugin-livereload": "^1.0.4",
         "rollup-plugin-node-resolve": "^5.2.0",
