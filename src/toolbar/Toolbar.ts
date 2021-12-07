@@ -4,7 +4,9 @@ import {AbstractToolbarPushItem} from "./AbstractToolbarPushItem"
 import {Utils} from "../utils/Utils"
 import {BaseDialog} from "../ui/BaseDialog"
 
-var MoreIcon = require("../icons/more.svg") as string
+// var MoreIcon = require("../icons/more.svg") as string
+import MoreIcon from "../icons/more.svg"
+import InternalConfig from '../utils/InternalConfig';
 
 export class Toolbar {
     
@@ -36,7 +38,7 @@ export class Toolbar {
     
     public init(config: Config) {
         let container = document.createElement('div');
-        container.className = config.ui + '-toolbar';
+        container.className = 'default-toolbar ' + config.ui;
         
         if (config.toolbarCls) {
             container.classList.add(config.toolbarCls);
@@ -47,8 +49,8 @@ export class Toolbar {
             item.element = toolbarElement;
             container.appendChild(toolbarElement);
         }
-        
-        config.targetElement.appendChild(container);
+
+        (config as InternalConfig).annotatorContainer.appendChild(container);
         
         this.container = container;
     }
@@ -60,7 +62,7 @@ export class Toolbar {
     protected getUIElement(config: Config, toolbarItem: ToolbarItem) {
         let me = this;
         let element = document.createElement('div');
-        element.className = config.ui + '-toolbar-item';
+        element.className = 'default-toolbar-item ' + config.ui;
         
         if (toolbarItem.itemId) {
             element.id = toolbarItem.itemId;
@@ -138,7 +140,7 @@ export class Toolbar {
                 let configUI = me.config.ui;
 //                showMenuItemsButton.classList.add(configUI + '-toolbar-more-btn');
                 showMenuItemsButton.innerHTML = MoreIcon;
-                showMenuItemsButton.classList.add(configUI + '-toolbar-item');
+                showMenuItemsButton.classList.add('default-toolbar-item ' + configUI);
                 showMenuItemsButton.addEventListener('click', me.showMoreIcons);
                 container.appendChild(showMenuItemsButton);
 //                container.insertBefore(showMenuItemsButton, items[numTotalItems - 1].element);
@@ -152,11 +154,18 @@ export class Toolbar {
             submenuContainer = me.submenuContainer;
         if (!submenuContainer) {
             submenuContainer = document.createElement('div');
-            submenuContainer.classList.add(me.config.ui + '-toolbar-submenu');
+            submenuContainer.classList.add('default-toolbar-item');
+            if (me.config.ui != '') {
+                submenuContainer.classList.add(me.config.ui);
+            }
             me.container.appendChild(submenuContainer);
             
-            let subClass = me.config.ui + '-toolbar-submenu-item';
-            
+            let subClass = 'default-toolbar-submenu-item';
+
+            // if (me.config.ui != '') {
+            //     subClass += me.config.ui + '-toolbar-submenu-item'
+            // }
+
             for (let item of me.submenuItems) {
                 if (!item.element.classList.contains(subClass)) {
                     item.element.classList.add(subClass);

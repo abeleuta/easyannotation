@@ -5,7 +5,8 @@ import {BaseAnnotator} from "../annotators/BaseAnnotator"
 import {CalloutAnnotator} from "../annotators/CalloutAnnotator"
 import {AnnotatorContainer} from "../AnnotatorContainer"
 
-var CalloutIcon = require("../icons/callout.svg") as string
+// var CalloutIcon = require("../icons/callout.svg") as string
+import CalloutIcon from "../icons/callout.svg"
 
 export class CalloutToolbarItem extends AbstractToolbarItem {
     

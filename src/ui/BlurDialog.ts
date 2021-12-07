@@ -32,7 +32,7 @@ export class BlurDialog extends BaseDialog {
         
         bodyDiv.className = 'body';
         container.appendChild(bodyDiv);
-        container.className = config.ui + '-dialog';
+        container.className = 'default-dialog ' + config.ui;
 
         bodyDiv.style.height = '80px';
         
@@ -88,7 +88,7 @@ export class BlurDialog extends BaseDialog {
         
         let allPatterns = AnnotationUtils.getDefs(config).getElementsByTagName('pattern'),
             l = allPatterns.length, i;
-        for (i = 0;i<l;i++) {
+        for (i = 0; i < l; i++) {
             if (allPatterns[i].id.indexOf('mainFillPattern') === 0) {
                 sampleDiv.style.backgroundImage = 'url("' + (allPatterns[i].getElementsByTagName('image')[0] as SVGImageElement).href.baseVal + '")';
                 break;
@@ -169,6 +169,8 @@ export class BlurDialog extends BaseDialog {
         }
         
         me.blurSlider.value = blur;
+
+        this.sampleDiv.style.filter = 'blur(' + parseFloat(this.blurSlider.value)/15 + 'px)';
     }
     
     private onBlurChange = (evt: Event) => {

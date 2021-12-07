@@ -42,7 +42,11 @@ export class ArrowAnnotator extends LineAnnotator {
             me.initialized = true;
         }
     }
-    
+
+    getType() {
+        return ArrowAnnotator.xtype;
+    }
+
 }
 
 ClassManager.register(ArrowAnnotator.xtype, ArrowAnnotator);

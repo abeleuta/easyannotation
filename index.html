@@ -11,20 +11,24 @@
 					document.querySelector('#hallstattImg'), {
 						style: 'border: 1px solid #909090',
 						showClose: true,
+						ui: 'dark',
+						blurStyle: {
+							radius: 50
+						},
 						toolbarItems: [
 							{
 								xtype: 'delete',
 								title: 'Delete selected or all elements'
 							},
-							new easyannotation.TextToolbarItem(),
-							new easyannotation.LineToolbarItem(),
-							new easyannotation.ArrowToolbarItem(),
-							new easyannotation.EllipseToolbarItem(),
-							new easyannotation.RectToolbarItem(),
-							new easyannotation.CalloutToolbarItem(),
-							new easyannotation.ImageToolbarItem(),
-							new easyannotation.BlurToolbarItem(),
-							new easyannotation.FreeDrawToolbarItem(),
+							{xtype: 'text'},
+							{xtype: 'line'},
+							{xtype: 'arrow'},
+							{xtype: 'ellipse'},
+							{xtype: 'callout'},
+							{xtype: 'image'},
+							{xtype: 'blur'},
+							{xtype: 'free-draw'},
+							{xtype: 'polygon'},
 							{
 								itemId: 'save',
 								xtype: 'save',

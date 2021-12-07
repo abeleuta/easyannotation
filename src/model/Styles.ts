@@ -27,24 +27,32 @@ export default interface Effect {
 }
 
 export default interface FillStyle {
-    fillType: number;
+
+    fillType?: number;
     
-    color: string;
+    color?: string;
     
-    opacity: number;
+    opacity?: number;
     
     effects?: Array<Effect>;
 }
 
 export default interface DrawStyle {
     
-    startArrow: number;
+    startArrow?: number;
     
-    endArrow: number;
+    endArrow?: number;
     
-    width: number;
+    width?: number;
     
-    type: StrokeType;
+    type?: StrokeType;
     
-    color: string;
+    color?: string;
+}
+
+/**
+ * Blurring style for blurring annotators.
+ */
+export default interface BlurStyle {
+    radius?: number;
 }

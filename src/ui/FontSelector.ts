@@ -31,7 +31,7 @@ export class FontSelector extends BaseDialog {
             r = parseInt(''+(Math.random() * 1000), 10);
         bodyDiv.className = 'body';
         el.appendChild(bodyDiv);
-        el.className = config.ui + '-dialog';
+        el.className = 'default-dialog ' + config.ui;
         
         let fontDropDown = d.createElement('select'),
             allFonts = 

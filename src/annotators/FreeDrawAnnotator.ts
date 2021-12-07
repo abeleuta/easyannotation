@@ -15,17 +15,19 @@ export class FreeDrawAnnotator extends BaseStopableAnnotator {
     private bufferSize: number = 6;
 
     private rect: ClientRect;
-    private strPath: string;
+
+    protected strPath: string;
+
     private buffer: Array<Point> = []; // Contains the last positions of the mouse cursor
     
 //    all points of this path, if point x or y is Number.NaN, this means path is closed
     private points: Array<Point> = [];
-    
-    private svgContainer: SVGElement;
-    
-    private initialized: boolean = false;
-    
-    private isDrawing: boolean = false;
+
+    protected svgContainer: SVGElement;
+
+    protected initialized: boolean = false;
+
+    protected isDrawing: boolean = false;
     
     constructor(config: InternalConfig, parent: AnnotatorContainer) {
         super(config, parent);
@@ -35,7 +37,7 @@ export class FreeDrawAnnotator extends BaseStopableAnnotator {
         this.properties.push(Constants.DRAW_PROPERTY);
     }
     
-    private createPath(config: InternalConfig) {
+    protected createPath(config: InternalConfig) {
         let pathElement = document.createElementNS("http://www.w3.org/2000/svg", "path");
         pathElement.setAttribute("fill", "none");
         pathElement.setAttribute("stroke", config.drawStyle.color);
@@ -46,7 +48,7 @@ export class FreeDrawAnnotator extends BaseStopableAnnotator {
         this.parent.getSVGContainer().appendChild(this.svgGroupElement);
     }
     
-    private initAnnotator = () => {
+    private initAnnotator() {
         let me = this,
             parent = me.parent.getSVGContainer();
         me.rect = parent.getBoundingClientRect();
@@ -80,7 +82,7 @@ export class FreeDrawAnnotator extends BaseStopableAnnotator {
         me.initialized = true;
     }
     
-    private parentTouchMove = (evt: TouchEvent) => {
+    protected parentTouchMove = (evt: TouchEvent) => {
         let me = this;
         evt.preventDefault();
         if (me.isDrawing && me.baseSVGElement) {
@@ -88,8 +90,12 @@ export class FreeDrawAnnotator extends BaseStopableAnnotator {
             me.updateSvgPath();
         }
     }
-    
-    private parentMouseMove = (evt:MouseEvent) => {
+
+    protected parentMouseMove = (evt:MouseEvent) => {
+        this.onParentMouseMove(evt);
+    }
+
+    protected onParentMouseMove(evt: MouseEvent) {
         let me = this;
         evt.preventDefault();
         if (me.isDrawing && me.baseSVGElement) {
@@ -97,17 +103,17 @@ export class FreeDrawAnnotator extends BaseStopableAnnotator {
             me.updateSvgPath();
         }
     }
-    
-    private parentTouchStart = (evt: TouchEvent) => {
+
+    protected parentTouchStart = (evt: TouchEvent) => {
         evt.preventDefault();
-        this.startDraging(evt.changedTouches[0]);
+        this.startDragging(evt.changedTouches[0]);
     }
-    
+
     private parentMouseDown = (evt:MouseEvent) => {
-        this.startDraging(evt);
+        this.startDragging(evt);
     }
-    
-    private startDraging = (evt: MouseEvent | Touch) => {
+
+    protected startDragging (evt: MouseEvent | Touch) {
         let me = this;
         if (!me.baseSVGElement) {
             me.createPath(me.config);
@@ -120,17 +126,17 @@ export class FreeDrawAnnotator extends BaseStopableAnnotator {
         me.strPath += "M" + pt.x + " " + pt.y;
         (me.baseSVGElement as SVGPathElement).setAttribute("d", me.strPath);
     }
-    
-    private parentTouchEnd = (evt: TouchEvent) => {
+
+    protected parentTouchEnd = (evt: TouchEvent) => {
         evt.preventDefault();
         this.endDragging(evt.changedTouches[0]);
     }
-    
-    private parentMouseUp = (evt:MouseEvent) => {
+
+    protected parentMouseUp = (evt:MouseEvent) => {
         this.endDragging(evt);
     }
     
-    private endDragging = (evt: MouseEvent | Touch) => {
+    protected endDragging (evt: MouseEvent | Touch) {
         let me = this;
         me.isDrawing = false;
         let pt = me.getMousePosition(evt);
@@ -141,7 +147,7 @@ export class FreeDrawAnnotator extends BaseStopableAnnotator {
         (me.baseSVGElement as SVGPathElement).setAttribute("d", me.strPath);
     }
     
-    private getMousePosition = (e:MouseEvent | Touch) => {
+    protected getMousePosition (e:MouseEvent | Touch) {
         let rect = this.rect;
         return new Point(Math.round(e.pageX - rect.left - window.scrollX),
                          Math.round(e.pageY - rect.top - window.scrollY));

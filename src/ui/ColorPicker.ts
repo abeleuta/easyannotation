@@ -1,5 +1,7 @@
 import {Utils} from "../utils/Utils";
 import Config from "../Config";
+import InternalConfig from '../utils/InternalConfig';
+import * as Util from 'util';
 
 export class ColorPicker {
 
@@ -121,14 +123,16 @@ export class ColorPicker {
 
         this.paletteDiv = paletteDiv as HTMLDivElement;
         this.bodyElement = bodyElement;
-        document.body.addEventListener('mousedown', this.hidePicker);
         Utils.on(this.target, ['mousedown', 'touchstart'], this.changeVisibility);
-        document.body.appendChild(bodyElement);
+
+        let parentElement = (config as InternalConfig).annotatorContainer || document.body;
+        parentElement.appendChild(bodyElement);
     }
 
     private changeVisibility = (evt:MouseEvent | TouchEvent) => {
         evt.preventDefault();
         evt.stopPropagation();
+        console.log('--------');
         if (this.bodyElement.classList.contains('ea-picker-visible')) {
             this.hide();
         } else {
@@ -227,6 +231,10 @@ export class ColorPicker {
                         linear-gradient(to left, hsla(${hsvColor[0]}, 100%, 50%, ${transparency}), rgba(255, 255, 255, ${transparency}))`;
 
         let alpha = this.alpha.toString(16);
+        if (alpha.length == 1) {
+            alpha = '0' + alpha;
+        }
+
         if (this.color.length > 7) {
             this.color = this.color.substr(0, 7) + alpha;
         } else{
@@ -357,7 +365,7 @@ export class ColorPicker {
     }
 
     private hidePicker = (evt: MouseEvent) => {
-        let target = evt.target,
+        let target = Utils.getTarget(evt),
             pickerBody = this.bodyElement;
 
         while (target) {
@@ -374,6 +382,7 @@ export class ColorPicker {
     }
 
     public show() {
+        document.body.addEventListener('mousedown', this.hidePicker);
         let rect = this.target.getBoundingClientRect();
         let pickerBody = this.bodyElement;
         let checkFunction = () => {
@@ -408,6 +417,7 @@ export class ColorPicker {
 
     hide() {
         this.bodyElement.classList.remove('ea-picker-visible');
+        document.body.removeEventListener('mousedown', this.hidePicker);
     }
 
     private getValidHexColor(color: string) {
@@ -508,6 +518,9 @@ export class ColorPicker {
         if (this.alpha < 255 && color.length == 7) {
             color += this.getHex(this.alpha.toString(16));
         }
+
+        console.log('final color=', color);
+
         for(let l of this.listeners.save) {
             l.fn.call(l.caller, color);
         }

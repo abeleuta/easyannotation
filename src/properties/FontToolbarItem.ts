@@ -7,7 +7,8 @@ import {Font} from "../model/Font"
 import {FontSelector} from "../ui/FontSelector"
 import {Constants} from "../utils/Constants"
 
-var FontIcon = require("../icons/font-solid.svg") as string
+// var FontIcon = require("../icons/font-solid.svg") as string
+import FontIcon from "../icons/font-solid.svg"
 
 export class FontToolbarItem extends AbstractPropToolbarItem{
     

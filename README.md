@@ -38,6 +38,10 @@ Include code:
      // optional target element to place the EasyAnnotation container.
      // If not specified container will be placed on document.body element.
      targetElement: document.body,
+    
+     // default ui for Easy Annotation toolbar and buttons.
+     // Currently supported values are 'default' and 'dark'.
+     ui: 'default',
 
      //default font to be used for text elements.
      font: {
@@ -70,6 +74,17 @@ Include code:
         color: '#000' // default line color
      },
 
+    // Individual draw style for each annotator.
+    // If specified this style will be used when adding an annotator of the specified type.
+    drawStyles: {
+        line: DrawStyle,
+        arrow: DrawStyle,
+        rect: DrawStyle,
+        polygon: DrawStyle,
+        callout: DrawStyle,
+        ellipse: DrawStyle
+    },
+
      //default fill style for shapes that can be filled, the following options can be used:
      fillStyle: {
           fillType: 0, // a number between 0 and 9 defining the fill type. 
@@ -77,6 +92,16 @@ Include code:
           opacity: 100,  // default opacity fill for components, 100 - opaque, 0 - transparent
           color: '#000' // default fill color
      },
+    
+    // optional fill style for each annotator.
+    // If specified this style will be used when adding an annotator of the specified type.
+    fillStyles: {
+        text: FillStyle,
+        rect: FillStyle,
+        polygon: FillStyle,
+        callout: FillStyle,
+        ellipse: FillStyle
+    },
 
      x: null, //x position based on target element
      y: null, //y position based on target element
@@ -113,15 +138,16 @@ Include code:
                         iconSVG: EraseIcon,
                         title: 'Delete selected or all elements'
                     },
-                    new TextToolbarItem(),     //text element
-                    new LineToolbarItem(),     //line element
-                    new ArrowToolbarItem(),    //arrow element
-                    new EllipseToolbarItem(),   //ellipse/circle element
-                    new RectToolbarItem(),      //rectangle element
-                    new CalloutToolbarItem(),   //callout element
-                    new ImageToolbarItem(),     //image element
-                    new BlurToolbarItem(),      //bluring element to blur parts of the image
-                    new FreeDrawToolbarItem(me.config), //free draw element
+                    {xtype: 'text'},     //text element
+                    {xtype: 'line'},     //line element
+                    {xtype: 'arrow'},    //arrow element
+                    {xtype: 'ellipse'},   //ellipse/circle element
+                    {xtype: 'rect'},      //rectangle element
+                    {xtype: 'callout'},   //callout element
+                    {xtype: 'image'},     //image element
+                    {xtype: 'blur'},      //bluring element to blur parts of the image
+                    {xtype: 'free-draw'}, //free draw element
+                    {xtype: 'polygon'},   // polygon draw element
                     {
                         //save element
                         itemId: 'save',

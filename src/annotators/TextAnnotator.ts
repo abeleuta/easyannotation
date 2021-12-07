@@ -9,8 +9,10 @@ import {Constants} from "../utils/Constants"
 
 import {ClassManager} from "../utils/ClassManager"
 
-var AcceptIcon = require("../icons/accept.svg") as string
-var CloseIcon = require("../icons/close.svg") as string
+import AcceptIcon from "../icons/accept.svg"
+import CloseIcon from "../icons/close.svg"
+// var AcceptIcon = require("../icons/accept.svg") as string
+// var CloseIcon = require("../icons/close.svg") as string
 
 export class TextAnnotator extends RectAnnotator {
     
@@ -44,7 +46,10 @@ export class TextAnnotator extends RectAnnotator {
     
     protected initElement(config: InternalConfig) {
         let selectedRect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-        selectedRect.classList.add(config.ui + '-text-sel-rect');
+        selectedRect.classList.add('default-text-sel-rect');
+        if (config.ui != '') {
+            selectedRect.classList.add(config.ui);
+        }
         this.svgGroupElement.appendChild(selectedRect);
         this.selectedRect = selectedRect;
     }
@@ -53,7 +58,10 @@ export class TextAnnotator extends RectAnnotator {
         let me = this;
 //        
         let textSVG = document.createElementNS("http://www.w3.org/2000/svg", "text");
-        textSVG.classList.add(config.ui + '-svg-text-element');
+        textSVG.classList.add('default-svg-text-element');
+        if (config.ui != '') {
+            textSVG.classList.add(config.ui);
+        }
 //        textSVG.style.cursor = 'default';
         textSVG.addEventListener('dblclick', me.onTextClick);
         textSVG.addEventListener('touchstart', me.onTouchStart);
@@ -108,7 +116,10 @@ export class TextAnnotator extends RectAnnotator {
             let buttonsContainer = d.createElement('div'),
                 okButton = d.createElement('div'),
                 cancelButton = d.createElement('div');
-            buttonsContainer.classList.add(me.config.ui + '-text-ann-btn-container');
+            buttonsContainer.classList.add('default-text-ann-btn-container');
+            if (me.config.ui != '') {
+                buttonsContainer.classList.add(me.config.ui);
+            }
             buttonsContainer.appendChild(cancelButton);
             buttonsContainer.appendChild(okButton);
             
@@ -149,7 +160,7 @@ export class TextAnnotator extends RectAnnotator {
     
     public setFillStyle(fillStyle: FillStyle) {
         super.setFillStyle(fillStyle);
-        this.baseSVGElement.childNodes.forEach(function(ch) {
+        this.baseSVGElement.childNodes.forEach((ch) => {
             (ch as SVGTSpanElement).style.fill = fillStyle.color;
         });
     }
@@ -302,9 +313,14 @@ export class TextAnnotator extends RectAnnotator {
             }
             
             svgContainer.removeChild(me.foreignObject);
+            me.foreignObject = null;
         }
     }
-    
+
+    getType(): string {
+        return TextAnnotator.xtype;
+    }
+
 }
 
 ClassManager.register(TextAnnotator.xtype, TextAnnotator);

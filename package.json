@@ -1,8 +1,8 @@
 {
     "name": "easyannotation",
-    "version": "1.0.12",
+    "version": "2.0.1",
     "main": "./dist/easyannotation.min.js",
-    "module": "./dist/easyannotation.min.js",
+    "module": "./dist/easyannotation.esm.js",
     "description": "Image annotation in JavaScript",
     "keywords": [
         "annotate",
@@ -15,8 +15,8 @@
         "image"
     ],
     "scripts": {
-        "build": "webpack --mode production",
-        "dev": "webpack-dev-server --config=webpack.dev.js --mode development"
+        "build": "rollup --config rollup/conf-prod.js",
+        "dev": "rollup --watch --config rollup/conf-dev.js"
     },
     "author": "Andrei Beleuta",
     "contributors": [],
@@ -24,21 +24,20 @@
     "homepage": "http://easyannotation.com/",
     "repository": "https://github.com/abeleuta/easyannotation",
     "devDependencies": {
-        "@babel/core": "^7.11.6",
-        "babel-loader": "^8.1.0",
-        "css-loader": "^4.3.0",
-        "file-loader": "^6.1.0",
-        "html-webpack-plugin": "^4.5.0",
-        "optimize-css-assets-webpack-plugin": "^5.0.4",
-        "style-loader": "^1.2.1",
-        "svg-inline-loader": "^0.8.2",
-        "svgo-loader": "^2.2.1",
-        "ts-loader": "^8.0.4",
         "typescript": "^3.6.3",
-        "url-loader": "^4.1.0",
-        "webpack": "^4.44.2",
-        "webpack-cli": "^3.3.12",
-        "webpack-dev-server": "^3.11.0",
-        "xmldom": "^0.1.27"
+        "xmldom": "^0.1.27",
+        "rollup-plugin-commonjs": "^10.1.0",
+        "rollup-plugin-livereload": "^1.0.4",
+        "rollup-plugin-node-resolve": "^5.2.0",
+        "rollup-plugin-serve": "^1.0.1",
+        "rollup-plugin-static-site": "^0.1.0",
+        "rollup": "^1.21.4",
+        "rollup-plugin-cpy": "^2.0.1",
+        "rollup-plugin-delete": "^1.1.0",
+        "rollup-plugin-generate-package-json": "^3.1.3",
+        "rollup-plugin-postcss": "^2.0.3",
+        "rollup-plugin-svgo": "^1.0.3",
+        "rollup-plugin-terser": "^5.1.2",
+        "rollup-plugin-typescript2": "^0.24.3"
     }
 }

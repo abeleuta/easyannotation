@@ -8,7 +8,7 @@ import {Constants} from "../utils/Constants"
 
 import {BlurDialog} from "../ui/BlurDialog"
 
-var BlurSettingsIcon = require("../icons/cog-solid.svg") as string
+import BlurSettingsIcon from "../icons/cog-solid.svg"
 
 export class BlurPropsToolbarItem extends AbstractPropToolbarItem {
     
@@ -26,7 +26,7 @@ export class BlurPropsToolbarItem extends AbstractPropToolbarItem {
             me.blurDialog = new BlurDialog(config);
         }
         
-        me.blurDialog.show(me.element, selectedItems, function(res: any) {
+        me.blurDialog.show(me.element, selectedItems, (res: any) => {
             let opacity = res.opacity,
                 blur = res.blur;
             for(let item of selectedItems) {

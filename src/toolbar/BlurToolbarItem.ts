@@ -4,7 +4,7 @@ import InternalConfig from "../utils/InternalConfig"
 import {BlurAnnotator} from "../annotators/BlurAnnotator"
 import {AnnotatorContainer} from "../AnnotatorContainer"
 import {BaseAnnotator} from "../annotators/BaseAnnotator"
-var BlurIcon = require("../icons/blur.svg") as string
+import BlurIcon from "../icons/blur.svg"
 
 export class BlurToolbarItem extends AbstractToolbarItem {
     

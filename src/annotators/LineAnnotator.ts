@@ -61,7 +61,7 @@ export class LineAnnotator extends BaseAnnotator {
             w = me.width.toString();
 
         lineSVG.setAttribute('x2', w);
-        lineSVG.setAttribute('class', config.ui + '-annotator-line');
+        lineSVG.setAttribute('class', 'default-annotator-line ' + config.ui);
 
         backLineSVG.setAttribute('class', 'annotator-back-line');
         backLineSVG.setAttribute('x2', w);
@@ -199,7 +199,19 @@ export class LineAnnotator extends BaseAnnotator {
             me = this,
             color = drawStyle.color,
             lineSVG = me.baseSVGElement;
-        
+
+        if (!startArrow) {
+            startArrow = 0;
+        }
+
+        if (!endArrow) {
+            endArrow = 0;
+        }
+
+        if (!color) {
+            color = '#000';
+        }
+
         switch (startArrow) {
             case 0:
                 if (me.arrowStartHead) {
@@ -233,6 +245,10 @@ export class LineAnnotator extends BaseAnnotator {
                 markerResult[1].style.fill = color;
                 markerResult[1].style.stroke = color;
         }
+    }
+
+    public setOpacity(opacity: number) {
+
     }
 
     public setDrawColor(color: string) {
@@ -507,7 +523,11 @@ export class LineAnnotator extends BaseAnnotator {
                 
         me.loadJSONDraw(obj);
     }
-    
+
+    getType() {
+        return LineAnnotator.xtype;
+    }
+
 }
 
 ClassManager.register(LineAnnotator.xtype, LineAnnotator);

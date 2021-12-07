@@ -34,12 +34,14 @@ export class DropDown {
             isPhone = Utils.isPhone(),
             index = 0, me = this;
             
-        container.className = config.ui + '-drop-down' + (cls ? ' ' + cls : '');
+        container.className = 'default-drop-down ' + config.ui + (cls ? ' ' + cls : '');
         optionsContainer.className = 'options-container';
         
         if (isPhone) {
             optionsContainer.classList.add('mobile-dropdown-container');
-            optionsContainer.classList.add(config.ui + '-mobile-dropdown-container');
+            if (config.ui != '') {
+                optionsContainer.classList.add(config.ui);
+            }
             optionsContainer.addEventListener('touchmove', function (evt: TouchEvent) {
                 evt.preventDefault();
             });
@@ -57,8 +59,8 @@ export class DropDown {
                 this.multiOptions = true;
                 if (optionHTML.length > 0) {
                     let optionElement = d.createElement('div');
-                    optionElement.setAttribute('optIndex', index.toString());
-                    optionElement.setAttribute('hasSubDropdDown', '1');
+                    optionElement.setAttribute('data-optindex', index.toString());
+                    optionElement.setAttribute('data-hasSubDropdDown', '1');
                     optionElement.className = 'option';
                     if (isMobileDevice) {
                         optionElement.addEventListener('touchend', me.onOptionEvent, { passive: false });
@@ -71,11 +73,11 @@ export class DropDown {
                     optionsContainer.appendChild(optionElement);
                     
                     let subOptionsContainer = d.createElement('div');
-                    subOptionsContainer.className = 'subdrop-down';
+                    subOptionsContainer.className = 'subdrop-down ' + config.ui;
                     if (isPhone) {
                         subOptionsContainer.classList.add("mobile-sub-dropdown");
                     }
-                    subOptionsContainer.setAttribute('subIndex', index.toString());
+                    subOptionsContainer.setAttribute('data-subindex', index.toString());
                     subOptionsContainer.addEventListener('mouseover', me.onSubOptionsOver);
                     let skipFirstOption = true,
                         subIndex = 0;
@@ -85,8 +87,8 @@ export class DropDown {
                             continue;
                         }
                         let subOptionElement = d.createElement('div');
-                        subOptionElement.setAttribute('optIndex', subIndex.toString());
-                        subOptionElement.setAttribute('optValue', typeof(subOptions) === 'string' ? subOptions : subOptions.value);
+                        subOptionElement.setAttribute('data-optindex', subIndex.toString());
+                        subOptionElement.setAttribute('data-optvalue', typeof(subOptions) === 'string' ? subOptions : subOptions.value);
                         subOptionElement.className = 'option';
                         if (isPhone) {
                             subOptionElement.classList.add("mobile-sub-option");
@@ -105,10 +107,10 @@ export class DropDown {
                 }
             } else {
                 let optionElement = d.createElement('div');
-                optionElement.setAttribute('optIndex', index.toString());
+                optionElement.setAttribute('data-optindex', index.toString());
                 optionElement.className = 'option';
                 optionElement.innerHTML = optionHTML;
-                optionElement.setAttribute('optValue', optionHTML);
+                optionElement.setAttribute('data-optvalue', optionHTML);
                 if (isMobileDevice) {
                     optionElement.addEventListener('touchend', me.selectOption,  { passive: false });
                 } else {
@@ -125,16 +127,13 @@ export class DropDown {
             container.firstChild.addEventListener('click', me.onDropDownClick, false);
         }
         me.valueDiv = (container.getElementsByClassName(valueCls)[0] as HTMLDivElement);
-        if (!isPhone) {
-            container.appendChild(optionsContainer);
-        }
-        
+
         me.container = container;
         me.optionsContainer = optionsContainer;
         
         if (isPhone) {
             let topButtonsDiv = d.createElement('div');
-            topButtonsDiv.className = config.ui + '-mobile-buttons';
+            topButtonsDiv.className = 'default-mobile-buttons ' + config.ui;
             optionsContainer.insertBefore(topButtonsDiv, optionsContainer.firstChild);
             let closeButtonDiv = d.createElement('div');
             if (me.multiOptions) {
@@ -176,7 +175,7 @@ export class DropDown {
             element = element.parentElement as HTMLElement;
         }
         
-        if (element.getAttribute('hasSubDropdDown') === '1') {
+        if (element.getAttribute('data-hasSubDropdDown') === '1') {
             me.subDropDownVisible = true;
             subDropDown = (element.getElementsByClassName('subdrop-down')[0] as HTMLElement);
             
@@ -262,15 +261,20 @@ export class DropDown {
     
     private checkContainer = () => {
         let me = this,
-            parent = me.container.parentElement,
+            parent = me.container.parentNode,
             body = document.body;
         while (parent) {
             if (parent == body) {
                 return;
             }
-            parent = parent.parentElement;
+
+            if ((parent instanceof ShadowRoot)) {
+                return;
+            }
+
+            parent = parent.parentNode;
         }
-        
+
         me.subDropDownVisible = false;
         me.removeMobileCls();
         if (me.intervalID > 0) {
@@ -328,33 +332,39 @@ export class DropDown {
             body = document.body,
             optionsContainer = me.optionsContainer;
 
-        if (!optionsContainer.parentElement) {
-            if (Utils.isPhone()) {
-                body.appendChild(optionsContainer);
-                body.style.overflow = 'hidden';
-            } else {
-                me.container.appendChild(optionsContainer);
-            }
-        }
-        evt.stopPropagation();
-        optionsContainer.style.display = 'block';
-        let parentBoundBox = optionsContainer.parentElement.getBoundingClientRect(),
-            optionsBounds = optionsContainer.getBoundingClientRect();
-        if (parentBoundBox.top + optionsBounds.height > window.innerHeight) {
-            optionsContainer.style.top = -(optionsBounds.height + parentBoundBox.height) + 'px';
+        if (optionsContainer.parentElement) {
+            me.optionsContainer.parentElement.removeChild(me.optionsContainer);
+            me.clearListeners();
         } else {
-            optionsContainer.style.top = '0';
-        }
-//        add a timeout to check when container is removed from the DOM tree and remove event listener
-        me.intervalID = window.setInterval(me.checkContainer, 1000);
-        
-        window.setTimeout(function(obj: DropDown) {
-            if (Utils.isMobileDevice()) {
-                window.addEventListener('touchstart', obj.hideDropDown, { passive: false });
-            } else {
-                window.addEventListener('click', obj.hideDropDown, false);
+
+            if (!optionsContainer.parentElement) {
+                if (Utils.isPhone()) {
+                    body.appendChild(optionsContainer);
+                    body.style.overflow = 'hidden';
+                } else {
+                    me.container.appendChild(optionsContainer);
+                }
             }
-        }, 500, me);
+            evt.stopPropagation();
+            optionsContainer.style.display = 'block';
+            let parentBoundBox = optionsContainer.parentElement.getBoundingClientRect(),
+                optionsBounds = optionsContainer.getBoundingClientRect();
+            if (parentBoundBox.top + optionsBounds.height > window.innerHeight) {
+                optionsContainer.style.top = -(optionsBounds.height + parentBoundBox.height) + 'px';
+            } else {
+                optionsContainer.style.top = '0';
+            }
+//        add a timeout to check when container is removed from the DOM tree and remove event listener
+            me.intervalID = window.setInterval(me.checkContainer, 1000);
+
+            window.setTimeout(function (obj: DropDown) {
+                if (Utils.isMobileDevice()) {
+                    window.addEventListener('touchstart', obj.hideDropDown, {passive: false});
+                } else {
+                    window.addEventListener('click', obj.hideDropDown, false);
+                }
+            }, 500, me);
+        }
     }
     
     private closeDropDown = (evt: TouchEvent) => {
@@ -370,8 +380,9 @@ export class DropDown {
     private hideDropDown = (evt: MouseEvent | TouchEvent) => {
         let me = this,
             optionsContainer = me.optionsContainer,
-            target = evt ? evt.target as HTMLElement : null,
+            target = evt ? Utils.getTarget(evt) : null,
             intervalID = me.intervalID;
+
         while (target) {
             if (target == optionsContainer) {
                 return;
@@ -399,11 +410,11 @@ export class DropDown {
             me.optionsContainer.parentElement.removeChild(me.optionsContainer);
         }
         let target = evt.target as HTMLDivElement;
-        while (!target.getAttribute('optIndex')) {
+        while (!target.getAttribute('data-optindex')) {
             target = target.parentElement as HTMLDivElement;
         }
         
-        let value = target.getAttribute('optValue'),
+        let value = target.getAttribute('data-optvalue'),
             allOptions = target.parentElement.childNodes,
             i, l = allOptions.length,
             allDivs = target.getElementsByTagName('div'),
@@ -430,7 +441,7 @@ export class DropDown {
             allDivs[allDivs.length - 1].className = 'checked';
         }
         
-        me.selectedIndex = parseInt(target.getAttribute('optIndex'), 10);
+        me.selectedIndex = parseInt(target.getAttribute('data-optindex'), 10);
         if (!me.multiOptions) {
             if (me.editable) {
                 (me.valueDiv.firstChild as HTMLInputElement).value = target.innerHTML;
@@ -441,7 +452,7 @@ export class DropDown {
         
         if (me.onchange) {
             me.onchange(me.selectedIndex, value, 
-                me.multiOptions ? parseInt(target.parentElement.getAttribute('subIndex'), 10) : 0);
+                me.multiOptions ? parseInt(target.parentElement.getAttribute('data-subindex'), 10) : 0);
         }
         
         if (me.onclose) {

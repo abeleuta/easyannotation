@@ -59,8 +59,17 @@ export class BaseDialog {
     }
 
     protected hideDialog (evt: MouseEvent) {
-        let target = evt.target as HTMLElement,
+        let target = Utils.getTarget(evt),
             dialogContainer = this.container;
+
+        if ((evt as any).rangeParent) {
+            let rangeInput = (evt as any).rangeParent;
+            //in some cases dialog is closed when user clicks the range input, so need to ignore this event
+            if (rangeInput.nodeName == 'INPUT') {
+                return;
+            }
+        }
+
         while (target) {
             if (target == dialogContainer) {
                 return;
@@ -84,7 +93,9 @@ export class BaseDialog {
         } else {
             window.removeEventListener('click', me.hideDialog);
         }
-        me.container.parentElement.removeChild(me.container);//.style.display = 'none';
+        if (me.container.parentElement) {
+            me.container.parentElement.removeChild(me.container);
+        }
     }
 
     protected addBaseButtons(container: HTMLDivElement, okButton: HTMLButtonElement, cancelButton: HTMLButtonElement) {

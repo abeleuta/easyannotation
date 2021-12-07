@@ -8,5 +8,8 @@ export class BaseStopableAnnotator extends BaseAnnotator {
     public stop() {
         this.stopped = true;
     }
-    
+
+    isDisableListeners() {
+        return true;
+    }
 }

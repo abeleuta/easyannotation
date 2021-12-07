@@ -52,7 +52,7 @@ export class DrawDialog extends BaseDialog {
             cancelButton = d.createElement('button');
         bodyDiv.className = 'body';
         el.appendChild(bodyDiv);
-        el.className = config.ui + '-dialog';
+        el.className = 'default-dialog ' + config.ui;
 
         bodyDiv.style.height = '230px';
         
@@ -62,9 +62,9 @@ export class DrawDialog extends BaseDialog {
         bodyDiv.appendChild(label);
         
         let drawStyleDropDown = new DropDown(config, [
-            '<div style="height:1px;background:#000;margin-top:12px"></div>',
-            '<div style="height:1px;border-top:1px dotted #000;margin-top:12px"></div>',
-            '<div style="height:1px;border-top:1px dashed #000;margin-top:12px"></div>',
+            '<div style="height:1px;background:var(--dropdown-item-color, #000);margin-top:12px"></div>',
+            '<div style="height:1px;border-top:1px dotted var(--dropdown-item-color, #000);margin-top:12px"></div>',
+            '<div style="height:1px;border-top:1px dashed var(--dropdown-item-color, #000);margin-top:12px"></div>',
             ]);
         drawStyleDropDown.setSelectedIndex(drawStyle.type);
         drawStyleDropDown.onchange = me.onLineStyleChange;
@@ -83,7 +83,7 @@ export class DrawDialog extends BaseDialog {
             if (width == drawStyle.width) {
                 selectedIndex = i;
             }
-            divOptions.push('<div style="height:' + width + 'px;background:#000;margin-top:' + (25 - width)/2 + 'px"></div>');
+            divOptions.push('<div style="height:' + width + 'px;background: var(--dropdown-item-color, #000);margin-top:' + (25 - width)/2 + 'px"></div>');
         }
         let lineWidthDropDown = new DropDown(config, divOptions);
         lineWidthDropDown.onchange = me.onLineWidthChange;
@@ -369,6 +369,7 @@ export class DrawDialog extends BaseDialog {
     }
     
     protected hideDialog = (evt: MouseEvent) => {
+        console.log('hideDialog....');
         let me = this;
         if (!me.drawStyleDropDown.isOpen() && !me.lineWidthDropDown.isOpen() &&
             !me.startArrowDropDown.isOpen() && !me.endArrowDropDown.isOpen() &&

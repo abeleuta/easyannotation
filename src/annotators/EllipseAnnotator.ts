@@ -393,7 +393,11 @@ export class EllipseAnnotator extends BaseAnnotator {
         me.setCoordinates();
         me.arrangeResizeElements();
     }
-    
+
+    getType(): string {
+        return EllipseAnnotator.xtype;
+    }
+
 }
 
 ClassManager.register(EllipseAnnotator.xtype, EllipseAnnotator);

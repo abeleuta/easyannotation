@@ -150,7 +150,11 @@ export class BlurAnnotator extends RectAnnotator {
             this.blur = blur.toString();
         }
     }
-    
+
+    getType(): string {
+        return BlurAnnotator.xtype;
+    }
+
 }
 
 ClassManager.register(BlurAnnotator.xtype, BlurAnnotator);

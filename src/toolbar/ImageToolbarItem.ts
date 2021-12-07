@@ -4,7 +4,8 @@ import {BaseAnnotator} from "../annotators/BaseAnnotator"
 import {ImageAnnotator} from "../annotators/ImageAnnotator"
 import {AnnotatorContainer} from "../AnnotatorContainer"
 
-var ImageIcon = require("../icons/image-regular.svg") as string
+// var ImageIcon = require("../icons/image-regular.svg") as string
+import ImageIcon from "../icons/image-regular.svg"
 
 export class ImageToolbarItem extends AbstractToolbarItem {
     

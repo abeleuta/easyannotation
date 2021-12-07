@@ -37,11 +37,6 @@ export class RectAnnotator extends BaseAnnotator {
         this.config = config as InternalConfig;
         this.initElement(config);
         this.properties = [Constants.DRAW_PROPERTY, Constants.FILL_PROPERTY];
-
-        //position matrix
-        this.baseSVGElement.transform.baseVal.appendItem(AnnotationUtils.createTransform(this.config));
-        //rotate transform
-        this.svgGroupElement.transform.baseVal.appendItem(AnnotationUtils.createTransform(this.config));
     }
 
     protected initElement(config: Config) {
@@ -57,8 +52,8 @@ export class RectAnnotator extends BaseAnnotator {
         me.svgGroupElement.appendChild(rectSVG);
         me.baseSVGElement = rectSVG;
 
-        for (let i = 0; i < 5; i++) {
-            let resizeEl = i == 4 ? me.createRotateElement(config) : me.createResizeElement(config);
+        for (let i = 0; i < 4; i++) {
+            let resizeEl = me.createResizeElement(config);
             me.resizeElements.push(resizeEl);
             me.addResizeEvents(resizeEl);
             me.svgGroupElement.appendChild(resizeEl);
@@ -92,11 +87,8 @@ export class RectAnnotator extends BaseAnnotator {
             resizeElem = evt.target,
             pixelRatio = me.getPixelRatio();
 
-        let point = new Point(evt.screenX, evt.screenY);
-        let rotatedPoint = this.getUnrotatedPoint(point);
-
-        me.screenX = rotatedPoint.x / pixelRatio;
-        me.screenY = rotatedPoint.y / pixelRatio;
+        me.screenX = evt.screenX / pixelRatio;
+        me.screenY = evt.screenY / pixelRatio;
 
         me.dragStartW = me.width;
         me.dragStartH = me.height;
@@ -112,21 +104,15 @@ export class RectAnnotator extends BaseAnnotator {
 
     private onResizeMouseUp = (evt: MouseEvent) => {
         this.currentResizeIndex = -1;
-        console.log('this.currentResizeIndex=', this.currentResizeIndex);
     }
 
     public moveBy(dx: number, dy: number, evt: MouseEvent) {
         let me = this,
             resizeIndex = me.currentResizeIndex;
         if (resizeIndex >= 0) {
-            let point = new Point(evt.screenX, evt.screenY);
-            let rotatedPoint = this.getUnrotatedPoint(point);
-
-            console.log('point=', point,'  rotated=', rotatedPoint, 'resizeIndex=',resizeIndex);
-
             let pixelRatio = me.getPixelRatio(),
-                difX = rotatedPoint.x / pixelRatio - me.screenX,
-                difY = rotatedPoint.y / pixelRatio - me.screenY;
+                difX = evt.screenX / pixelRatio - me.screenX,
+                difY = evt.screenY / pixelRatio - me.screenY;
             switch (resizeIndex) {
                 case 0:
 //                top left
@@ -152,10 +138,6 @@ export class RectAnnotator extends BaseAnnotator {
                     me.width = me.dragStartW - difX;
                     me.height = me.dragStartH + difY;
                     break;
-                case 4:
-//                rotate
-                    this.rotateElement(evt);
-                    return;
             }
             me.baseSVGElement.setAttribute('x', me.x.toString());
             me.baseSVGElement.setAttribute('y', me.y.toString());
@@ -164,26 +146,6 @@ export class RectAnnotator extends BaseAnnotator {
             me.arrangeResizeElements();
         } else {
             super.moveBy(dx, dy, evt);
-        }
-    }
-
-    protected rotateElement(evt: MouseEvent) {
-        let rect = this.svgGroupElement.getBoundingClientRect();
-
-        let centerX = this.width / 2;
-        let centerY = this.height / 2;
-
-        let realCenterX = rect.left + rect.width / 2;
-
-        if (Math.abs(evt.clientX - realCenterX) > 1) {
-            const sign = Math.sign(evt.clientX - realCenterX);
-            const realCenterY = rect.top + rect.height / 2;
-            this.rotateAngle = (Math.atan((evt.clientY - realCenterY) / (evt.clientX - realCenterX)) * 180) / Math.PI
-                + 90 * sign;
-
-            const rotate = this.svgGroupElement.transform.baseVal.getItem(1);
-            rotate.setRotate(this.rotateAngle, centerX, centerY);
-            this.svgGroupElement.transform.baseVal.replaceItem(rotate, 1);
         }
     }
 
@@ -212,9 +174,6 @@ export class RectAnnotator extends BaseAnnotator {
         me.arrangeElement(me.resizeElements[2], right, bottom);
 //        bottom - left
         me.arrangeElement(me.resizeElements[3], left, bottom);
-
-        //rotate element
-        me.arrangeElement(me.resizeElements[4], me.x + me.width / 2, me.y - 25);
     }
 
     protected arrangeElement(element: SVGGraphicsElement, x: number, y: number) {
@@ -397,6 +356,10 @@ export class RectAnnotator extends BaseAnnotator {
             me.arrangeResizeElements();
         }
 
+    }
+
+    getType(): string {
+        return RectAnnotator.xtype;
     }
 }
 

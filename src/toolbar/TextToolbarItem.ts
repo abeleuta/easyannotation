@@ -5,7 +5,8 @@ import {BaseAnnotator} from "../annotators/BaseAnnotator"
 import {TextAnnotator} from "../annotators/TextAnnotator"
 import {AnnotatorContainer} from "../AnnotatorContainer"
 
-var TIcon = require("../icons/letter-t.svg") as string
+// var TIcon = require("../icons/letter-t.svg") as string
+import TIcon from "../icons/letter-t.svg"
 
 export class TextToolbarItem extends AbstractToolbarItem {
     

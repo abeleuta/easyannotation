@@ -27,6 +27,7 @@ import {DrawToolbarItem} from "./properties/DrawToolbarItem"
 import {FillToolbarItem} from "./properties/FillToolbarItem"
 import {FontToolbarItem} from "./properties/FontToolbarItem"
 import {BlurPropsToolbarItem} from "./properties/BlurPropsToolbarItem"
+import {PolygonToolbarItem} from './toolbar/PolygonToolbarItem';
 
 import {Point} from "./model/Point"
 import DrawStyle from "./model/Styles"
@@ -37,9 +38,10 @@ import {ClassManager} from "./utils/ClassManager"
 import {AnnotationUtils} from "./utils/AnnotationUtils"
 import {Utils} from "./utils/Utils"
 
-var EraseIcon = require("./icons/eraser-solid.svg") as string
-var SaveIcon = require("./icons/save-solid.svg") as string
-var CloseIcon = require("./icons/close.svg") as string
+import EraseIcon from "./icons/eraser-solid.svg"
+import SaveIcon from "./icons/save-solid.svg"
+import CloseIcon from './icons/close.svg'
+import {BlurAnnotator} from './annotators/BlurAnnotator';
 
 export const enum ExportType {
     XML = 0,
@@ -124,20 +126,28 @@ export class AnnotatorContainer {
                 me.imageElement.onload = me.imageLoaded;
             }
         }
+
+        this.addStyleElement();
         
         if (!config) {
             config = {
             } as Config;
         }
-        
+
         config.targetElement = config.targetElement || document.body;
-//        config.toolbarPosition = config.toolbarPosition || ToolbarPosition.Top;
-        config.ui = config.ui || 'default';
+
+        let annotatorIdx = AnnotationUtils.getNextAnnotatorIdx();
+        (internalConfig as InternalConfig).annotatorIdx = annotatorIdx;
+        internalConfig.targetElement = config.targetElement;
+
+        config.ui = config.ui || '';
+        if (config.ui === 'default') {
+            config.ui = '';
+        }
         config.font = config.font || {
-//            name: 'Arial',
-//            size: 24,
             italic: false,
-            bold: false
+            bold: false,
+            color: '#000'
         } as unknown as Font;
         
         config.font.size = config.font.size || 24;
@@ -167,18 +177,26 @@ export class AnnotatorContainer {
         }
         
         if (!config.fillStyle) {
-            config.fillStyle = {
-                fillType: 0,
-                color: '#8EB9ED',
-                opacity: 100
-            } as FillStyle;
+            config.fillStyle = {} as FillStyle;
         }
-        
+
+        if (!config.fillStyle.color) {
+            config.fillStyle.color = '#787878';
+        }
+
+        if (!config.fillStyle.fillType) {
+            config.fillStyle.fillType = 0;
+        }
+
+        if (config.fillStyle.opacity === undefined) {
+            config.fillStyle.opacity = 100;
+        }
+
         me.width = width;
         me.height = height;
         
         me.targetElement = config.targetElement;
-        
+
         if (config.showToolbar === undefined) {
             config.showToolbar = true;
         }
@@ -191,10 +209,10 @@ export class AnnotatorContainer {
         for(let a in confAny) {
             internalConfig[a] = confAny[a];
         }
-        
-        (internalConfig as InternalConfig).annotatorIdx = AnnotationUtils.getNextAnnotatorIdx();
 
-        me.config = internalConfig as InternalConfig;
+        internalConfig.annotatorIdx = annotatorIdx;
+        me.config = internalConfig;
+
         let confDrawStyle = config.drawStyle,
             confFillStyle = config.fillStyle;
         me.drawStyle = {
@@ -245,13 +263,17 @@ export class AnnotatorContainer {
     
     private init() {
         let d = document,
+            containerParent = d.createElement('easy-annotation'),
             containerElement = d.createElement('div'),
             svgContainer = d.createElementNS('http://www.w3.org/2000/svg', 'svg'),
             me = this,
             config = me.config,
             ui = config.ui,
             imageElement = me.imageElement;
-        containerElement.className = ui + '-annotator-container';
+
+        config.annotatorContainer = containerParent;
+        containerParent.appendChild(containerElement);
+        containerElement.className = 'default-annotator-container ' + ui;
 
         if (config.containerCls) {
             containerElement.classList.add(config.containerCls);
@@ -262,7 +284,7 @@ export class AnnotatorContainer {
         }
         
         me.selectRect = d.createElementNS('http://www.w3.org/2000/svg', 'rect');
-        me.selectRect.setAttribute('class', ui + '-annotator-select-rect');
+        me.selectRect.setAttribute('class', 'default-annotator-select-rect ' + ui);
 
         if (me.width == 0 || me.height == 0) {
             me.width = imageElement.clientWidth || imageElement.width;
@@ -290,10 +312,10 @@ export class AnnotatorContainer {
 //            containerElement.style.marginTop = '50px';
         }
         
-        me.container = containerElement;
+        me.container = containerParent;
         me.svgContainer = svgContainer;
         
-        me.targetElement.appendChild(containerElement);
+        me.targetElement.appendChild(containerParent);
         
         let x = config.x,
             y = config.y;
@@ -305,10 +327,10 @@ export class AnnotatorContainer {
             y = (rect.top - /*parentRect.top + */window.scrollY);
         }
 
-        containerElement.style.top = y + 'px';
-        containerElement.style.left = x + 'px';
-        containerElement.style.width = w + 'px';
-        containerElement.style.height = h + 'px';
+        containerParent.style.top = y + 'px';
+        containerParent.style.left = x + 'px';
+        containerParent.style.width = w + 'px';
+        containerParent.style.height = h + 'px';
         
         me.defs = d.createElementNS('http://www.w3.org/2000/svg', 'defs');
         let mainPattern = d.createElementNS('http://www.w3.org/2000/svg', 'pattern');
@@ -392,7 +414,7 @@ export class AnnotatorContainer {
             gradientSVGContainer.setAttribute('aria-hidden', 'true');
             gradientSVGContainer.setAttribute('focusable', 'false');
             gradientSVGContainer.innerHTML = 
-                '<linearGradient class="' + this.config.ui + '-btn-gradient" id="easyAnnotatorBtnGradient" x2="1" y2="1">\
+                '<linearGradient class="default-btn-gradient ' + this.config.ui + '" id="easyAnnotatorBtnGradient" x2="1" y2="1">\
                     <stop offset="0%" stop-color="var(--color-stop-1)" />\
                     <stop offset="50%" stop-color="var(--color-stop-2)" />\
                     <stop offset="100%" stop-color="var(--color-stop-3)" />\
@@ -421,7 +443,7 @@ export class AnnotatorContainer {
         me.startX = x;
         me.startY = y;
         me.isDragging = true;
-        console.log('start drag, x=', x);
+        // console.log('start drag, x=', x);
     }
 
     private onTouchMove = (evt: TouchEvent) => {
@@ -438,11 +460,11 @@ export class AnnotatorContainer {
                 dx = evt.screenX - me.startX,
                 dy = evt.screenY - me.startY;
 
-            console.log('!!!!!!move, dx=', dx);
+            // console.log('!!!!!!move, dx=', dx);
 
             if (me.isDragging && selectedItems.length) {
                 for (let item of me.selectedItems) {
-                    // item.moveBy(dx, dy, evt);
+                    item.moveBy(dx, dy, evt);
                 }
             } else if (!me.pushedAnnotator) {
                 let selectRect = me.selectRect,
@@ -561,6 +583,7 @@ export class AnnotatorContainer {
             winScrollY = window.scrollY,
             toolbarTop = containerRect.top/* - containerParentRect.top*/ + winScrollY,
             toolbarLeft = containerRect.left + winScrollX,
+            useShadows = !!document.body.attachShadow,
             toolbarHeight = 0,
             targetRect = me.targetElement.getBoundingClientRect(),
             placeOnBody = me.targetElement == document.body;
@@ -579,8 +602,10 @@ export class AnnotatorContainer {
             let propToolbarContainer = me.propertiesToolbar.getContainer(),
             toolbarRect = propToolbarContainer.getBoundingClientRect();
             toolbarHeight = toolbarRect.height;
-            propToolbarContainer.style.top = (toolbarTop - toolbarRect.height) + 'px';
-            propToolbarContainer.style.left = toolbarLeft + 'px';
+            if (!useShadows) {
+                propToolbarContainer.style.top = (toolbarTop - toolbarRect.height) + 'px';
+            }
+            propToolbarContainer.style.left = useShadows ? '0' : toolbarLeft + 'px';
         }
 
         let maxWidth = me.width - 20,
@@ -605,8 +630,13 @@ export class AnnotatorContainer {
                 toolbarHeight = toolbarRect.height;
             }
 
-            toolbarContainer.style.top = (toolbarTop - toolbarRect.height) + 'px';
-            toolbarContainer.style.left = ((containerRect.right - (placeOnBody ? 0 : targetRect.left)) - toolbarRect.width) + 'px';
+            if (!useShadows) {
+                toolbarContainer.style.top = (toolbarTop - toolbarRect.height) + 'px';
+                toolbarContainer.style.left = ((containerRect.right - (placeOnBody ? 0 : targetRect.left)) - toolbarRect.width) + 'px';
+            } else {
+                toolbarContainer.style.left = (1 + containerRect.width - toolbarRect.width) + 'px';
+            }
+
             me.toolbar.doLayout();
             
             let firstToolbarItem = toolbarContainer.firstChild,
@@ -719,6 +749,9 @@ export class AnnotatorContainer {
                             case 'free-draw':
                                 toolbarItems[i] = new FreeDrawToolbarItem(me.config);
                                 break;
+                            case 'polygon':
+                                toolbarItems[i] = new PolygonToolbarItem(me.config);
+                                break;
                             case 'save':
                                 if (!item.iconSVG) {
                                     item.iconSVG = SaveIcon;
@@ -777,7 +810,18 @@ export class AnnotatorContainer {
             newAnnotator.moveBy(
                 (me.width - newAnnotator.getWidth()) / 2, 
                 (me.height - newAnnotator.getHeight()) / 2, null);
-            me._addElement(newAnnotator, me.drawStyle, me.fillStyle);
+
+            let drawStyle = this.config.drawStyles ? (this.config.drawStyles as any)[newAnnotator.getType()] : null;
+            if (!drawStyle) {
+                drawStyle = this.drawStyle;
+            }
+
+            let fillStyle = this.config.fillStyles ? (this.config.fillStyles as any)[newAnnotator.getType()] : null;
+            if (!fillStyle) {
+                fillStyle = this.fillStyle;
+            }
+
+            me._addElement(newAnnotator, drawStyle, fillStyle);
             me.deselectAll();
             newAnnotator.setSelected(true);
             me.selectedItems.push(newAnnotator);
@@ -793,7 +837,7 @@ export class AnnotatorContainer {
                 }
             }
             if (btnPushed != !!me.pushedAnnotator) {
-                if (me.pushedAnnotator != null) {
+                if (me.pushedAnnotator != null && me.pushedAnnotator.isDisableListeners()) {
                     me.disableListeners(true);
                 } else {
                     me.disableListeners(false);
@@ -864,6 +908,18 @@ export class AnnotatorContainer {
         
         if (newAnnotator instanceof TextAnnotator) {
             (newAnnotator as TextAnnotator).setFont(me.config.font);
+        }
+
+        if (newAnnotator instanceof BlurAnnotator && me.config.blurStyle) {
+            //only radius supported for now
+            if (me.config.blurStyle.radius !== undefined) {
+                //blur radius is between 0 (no blur) and 100
+                //blurring radius set to container should be between 0 and 200 / 15
+                let blurRadius = me.config.blurStyle.radius;
+                if (!isNaN(blurRadius) && blurRadius >= 0 && blurRadius <= 100) {
+                    (newAnnotator as BlurAnnotator).setBlur((blurRadius * 2) / 15);
+                }
+            }
         }
         
         me.annotators.push(newAnnotator);
@@ -1111,5 +1167,21 @@ export class AnnotatorContainer {
     public getSelectedItems() {
         return this.selectedItems;
     }
-    
+
+    private addStyleElement() {
+        let elemID = 'easyAnnotationStyleElem_7689678';
+        if (document.querySelector('#' + elemID)) {
+            return;
+        }
+        let styleElement = document.createElement('style');
+        styleElement.id = elemID;
+        styleElement.type = 'text/css';
+        styleElement.textContent =
+            `easy-annotation {
+                position: absolute;
+                display: block;
+            }`;
+
+        document.head.appendChild(styleElement);
+    }
 }

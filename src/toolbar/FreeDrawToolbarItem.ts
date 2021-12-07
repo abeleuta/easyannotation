@@ -5,15 +5,16 @@ import {BaseStopableAnnotator} from "../annotators/BaseStopableAnnotator"
 import {FreeDrawAnnotator} from "../annotators/FreeDrawAnnotator"
 import {AnnotatorContainer} from "../AnnotatorContainer"
 
-var FreeDrawIcon = require("../icons/free-draw.svg") as string
+// var FreeDrawIcon = require("../icons/free-draw.svg") as string
+import FreeDrawIcon from "../icons/free-draw.svg"
 
 export class FreeDrawToolbarItem extends AbstractToolbarPushItem {
     
-    private lastAnnotator: BaseStopableAnnotator;
+    protected lastAnnotator: BaseStopableAnnotator;
     
     public itemId: string;
-    
-    private config: InternalConfig;
+
+    protected config: InternalConfig;
     
     constructor(config: InternalConfig) {
         super();
@@ -27,33 +28,35 @@ export class FreeDrawToolbarItem extends AbstractToolbarPushItem {
         let lastAnnotator = this.lastAnnotator;
         if (lastAnnotator) {
             lastAnnotator.stop();
-            this.element.className = this.element.className.replace(' ' + config.ui + '-toolbar-item-pressed', '');
+            this.element.className = this.element.className.replace(' default-toolbar-item-pressed', '');
             this.lastAnnotator = null;
             lastAnnotator.setSelected(false);
             return null;
         }
         
-        this.element.className += ' ' + config.ui + '-toolbar-item-pressed';
-        let freeDrawAnnotator = new FreeDrawAnnotator(config, parent);
+        this.element.className += ' default-toolbar-item-pressed';
+        let freeDrawAnnotator = this.newAnnotator(config, parent);
         this.lastAnnotator = freeDrawAnnotator;
         return freeDrawAnnotator;
     }
+
+    protected newAnnotator(config: InternalConfig, parent: AnnotatorContainer) {
+        return new FreeDrawAnnotator(config, parent);
+    }
     
     public setPushed(pushed: boolean) {
-        let me = this,
-            element = me.element,
+        let element = this.element,
             config = this.config,
-            ui = config ? config.ui : 'default',
             className = element.className;
-        me.pushed = pushed;
+        this.pushed = pushed;
         if (pushed) {
             if (className.indexOf(('toolbar-item-pressed')) === -1) {
-                element.className += ' ' + ui + '-toolbar-item-pressed';
+                element.className += ' default-toolbar-item-pressed';
             }
         } else {
-            element.className = className.replace(' ' + ui + '-toolbar-item-pressed', '');
+            element.className = className.replace(' default-toolbar-item-pressed', '');
         }
-        me.lastAnnotator = null;
+        this.lastAnnotator = null;
     }
     
 }

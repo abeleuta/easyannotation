@@ -6,7 +6,8 @@ import {DrawDialog} from "../ui/DrawDialog"
 import DrawStyle from "../model/Styles"
 import {Constants} from "../utils/Constants"
 
-var Pencil = require("../icons/pencil-alt-solid.svg") as string
+// var Pencil = require("../icons/pencil-alt-solid.svg") as string
+import Pencil from "../icons/pencil-alt-solid.svg"
 
 export class DrawToolbarItem extends AbstractPropToolbarItem {
     

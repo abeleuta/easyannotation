@@ -5,7 +5,8 @@ import FillStyle from "../model/Styles"
 import {FillDialog} from "../ui/FillDialog"
 import {Constants} from "../utils/Constants"
 
-var FillColor = require("../icons/color.svg") as string
+// var FillColor = require("../icons/color.svg") as string
+import FillColor from "../icons/color.svg"
 
 export class FillToolbarItem extends AbstractPropToolbarItem {
     
@@ -24,7 +25,7 @@ export class FillToolbarItem extends AbstractPropToolbarItem {
             me.fillDialog = new FillDialog(config, config.fillStyle);
         }
 
-        me.fillDialog.show(me.element, selectedItems, function (fill: FillStyle) {
+        me.fillDialog.show(me.element, selectedItems, (fill: FillStyle) => {
 
             for (let item of selectedItems) {
                 item.setFillStyle(fill);

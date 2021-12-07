@@ -55,12 +55,12 @@ export class CalloutAnnotator extends RectAnnotator {
         let shadowPathElement = d.createElementNS("http://www.w3.org/2000/svg", "path");
 //        shadowPathElement.setAttribute('d', 'M 38,44 C 38,44 488,43 486,43 C 485,43 485,319 485,319 L 296,319 L 71,473 L 220,321 L 38,323 L 38,44 z');
 //        shadowPathElement.setAttribute('d', `M 38,44 C 38,44 ${this.width},43 ${this.width-2},43 C ${this.width-1},43 ${this.width-1},319 ${this.width-1},319 L 296,319 L 71,473 L 220,321 L 38,323 L 38,44 z`);
-        shadowPathElement.setAttribute('class', config.ui + '-annotator-callout-shadow');
+        shadowPathElement.setAttribute('class', 'default-annotator-callout-shadow ' + config.ui);
         
         let pathElement = d.createElementNS("http://www.w3.org/2000/svg", "path");
 //        pathElement.setAttribute('d', `M 0,0 C 0,0 471,30 470,30 C 469,30 469,306 469,306 L 280,306 L 55,460 L 204,308 L 22,310 L 22,31 z`);
 ////        pathElement.setAttribute('d', 'M 22,31 C 22,31 471,30 470,30 C 469,30 469,306 469,306 L 280,306 L 55,460 L 204,308 L 22,310 L 22,31 z');
-        pathElement.setAttribute('class', config.ui + '-annotator-callout');
+        pathElement.setAttribute('class', 'default-annotator-callout ' + config.ui);
         
         me.svgGroupElement.appendChild(shadowPathElement);
         me.svgGroupElement.appendChild(pathElement);
@@ -280,12 +280,19 @@ export class CalloutAnnotator extends RectAnnotator {
         
     public setDrawColor(color: string) {
         this.baseSVGElement.style.stroke = color;
+        this.shadowPathElement.style.stroke = color;
     }
     
     public setFillColor(color: string) {
         this.baseSVGElement.style.fill = color;
+        this.shadowPathElement.style.fill = color;
     }
-    
+
+    public setOpacity(opacity: number) {
+        super.setOpacity(opacity);
+        this.shadowPathElement.style.opacity = this.baseSVGElement.style.opacity;
+    }
+
     public toJSON() : Object {
         let me = this,
             result = super.toJSON() as any;
@@ -348,6 +355,10 @@ export class CalloutAnnotator extends RectAnnotator {
                 me.getXMLNumber(element, 'dy') - me.y, null);
         me.resize();
 
+    }
+
+    getType(): string {
+        return CalloutAnnotator.xtype;
     }
 
 }

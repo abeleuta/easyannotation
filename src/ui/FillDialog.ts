@@ -59,7 +59,7 @@ export class FillDialog extends BaseDialog {
             cancelButton = d.createElement('button');
         bodyDiv.className = 'body';
         container.appendChild(bodyDiv);
-        container.className = config.ui + '-dialog';
+        container.className = 'default-dialog ' + config.ui;
 
         bodyDiv.style.height = '180px';
         bodyDiv.style.width = '350px';
@@ -71,10 +71,10 @@ export class FillDialog extends BaseDialog {
         me.fillPatternLabel = label;
         bodyDiv.appendChild(label);
         
-        let dropdownOptions = ['<div style="height:20px;background:#000;"></div>'], i;
+        let dropdownOptions = ['<div class="fill-pattern" style="height:20px;background:#000;"></div>'], i;
 
         for (i = 1; i < 10; i++) {
-            dropdownOptions.push('<div class="fill-pattern' + i + '" style="height:20px;"></div>');
+            dropdownOptions.push('<div class="fill-pattern fill-pattern' + i + '" style="height:20px;"></div>');
         }
         
         let fillPatternDropDown = new DropDown(config, dropdownOptions, null, 'fill-value');
@@ -126,7 +126,7 @@ export class FillDialog extends BaseDialog {
         for(i in blurPx) {
             blurDropDownOptions.push({
                 html: '<div class="blur-option">' + blurPx[i] +
-                    '<div style="filter:blur(' + filterOptions[i] + ')"></div></div>',
+                    '<div class="filter-blur-' + filterOptions[i] + '"></div></div>',
                 value: blurPx[i]
             });
         }
@@ -185,7 +185,7 @@ export class FillDialog extends BaseDialog {
             let itemColor = itemFillStyle.color,
                 itemOpacity = itemFillStyle.opacity;
             
-            if (itemFillPattern != fillPattern) {
+            if (itemFillPattern !== undefined && itemFillPattern != fillPattern) {
                 if (fillPattern === -1) {
                     fillPattern = itemFillPattern;
                 } else {
@@ -193,7 +193,7 @@ export class FillDialog extends BaseDialog {
                 }
             }
             
-            if (itemOpacity != opacity) {
+            if (itemOpacity !== undefined && itemOpacity != opacity) {
                 if (opacity === -1) {
                     opacity = itemOpacity;
                 } else {
@@ -201,7 +201,7 @@ export class FillDialog extends BaseDialog {
                 }
             }
             
-            if (itemColor != color) {
+            if (itemColor !== undefined && itemColor != color) {
                 if (color === '') {
                     color = itemColor;
                 } else {
@@ -296,6 +296,7 @@ export class FillDialog extends BaseDialog {
         let me = this;
         me.fillStyle.color = color;
         me.sampleDiv.style.backgroundColor = color;
+        console.log('picker save:', color);
     }
 
     private pickerCancel = (originalColor: string) => {
@@ -306,6 +307,7 @@ export class FillDialog extends BaseDialog {
     private pickerColorChange = (color: string) => {
         this.colorPickerDiv.style.backgroundColor = color;
         this.fillStyle.color = color;
+        console.log('picker change:', color);
     }
     
     private onOKBtnClick = () => {

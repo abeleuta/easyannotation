@@ -1,11 +1,13 @@
 
 export class Font {
     
-    public name: string;
+    public name?: string;
     
-    public size: number;
+    public size?: number;
     
-    public italic: boolean;
+    public italic?: boolean;
     
-    public bold: boolean;
+    public bold?: boolean;
+
+    public color?: string;
 }

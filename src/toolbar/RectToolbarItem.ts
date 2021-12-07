@@ -5,7 +5,8 @@ import {BaseAnnotator} from "../annotators/BaseAnnotator"
 import {RectAnnotator} from "../annotators/RectAnnotator"
 import {AnnotatorContainer} from "../AnnotatorContainer"
 
-var RectIcon = require("../icons/rect.svg") as string
+// var RectIcon = require("../icons/rect.svg") as string
+import RectIcon from "../icons/rect.svg"
 
 export class RectToolbarItem extends AbstractToolbarItem {
     

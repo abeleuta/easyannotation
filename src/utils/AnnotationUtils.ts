@@ -16,11 +16,16 @@ export class AnnotationUtils {
     }
     
     private static getSVGElement(config: InternalConfig): SVGSVGElement {
-        let svgElements = document.getElementsByTagName('svg'),
+        let svgElements = config.annotatorContainer.getElementsByTagName('svg') as any,
             mainSvgElement = null,
             annotatorContainerID = 'easyAnnotatorSVGContainer' + config.annotatorIdx;
+
+        if (config.annotatorContainer?.shadowRoot) {
+            svgElements = config.annotatorContainer.shadowRoot.querySelectorAll('svg');
+        }
+
         if (svgElements.length) {
-            for(let i=0;i<svgElements.length;i++) {
+            for (let i = 0; i < svgElements.length; i++) {
                 if (svgElements[i].id == annotatorContainerID) {
                     mainSvgElement = svgElements[i];
                     break;
@@ -124,9 +129,9 @@ export class AnnotationUtils {
     }
     
     public static createFillPattern(config: InternalConfig, fillType: number, currentPattern: SVGPatternElement) {
-        let defsElement = this.getDefs(config);
         if (fillType > 0) {
-            
+            let defsElement = this.getDefs(config);
+
             if (currentPattern) {
 //                need to remove existing pattern
                 try {
@@ -179,6 +184,10 @@ export class AnnotationUtils {
         
         if (currentMarker) {
             svgDefs.removeChild(currentMarker);
+        }
+
+        if (!arrowType) {
+            arrowType = 0;
         }
             
         marker.setAttribute('id', 'arrowMarker_' + this.annotatorIdx + '_' + this.arrowMarkerIdx++);
@@ -240,7 +249,7 @@ export class AnnotationUtils {
         
         svgDefs.appendChild(marker);
         
-        headSVGElement.setAttribute('class', config.ui + '-arrow-head' + headAdditionalCls);
+        headSVGElement.setAttribute('class', 'default-arrow-head ' + config.ui + headAdditionalCls);
         
         return [marker, headSVGElement];
     }

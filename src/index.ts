@@ -1,13 +1,15 @@
+import {AnnotatorElement} from './ui/AnnotatorElement';
+
 declare var window: any;
 
 (function (window) {
     try {
-      new MouseEvent('test');
-      return false; // No need to polyfill
+        new MouseEvent('test');
+        return false; // No need to polyfill
     } catch (e) {
-                  // Need to polyfill - fall through
+        // Need to polyfill - fall through
     }
-    
+
     class MouseEventArgs extends MouseEvent {
 
         constructor() {
@@ -24,21 +26,21 @@ declare var window: any;
             params = new MouseEventArgs();
         }
         var mouseEvent = document.createEvent('MouseEvent');
-        mouseEvent.initMouseEvent(eventType, 
-                params._bubles,
-                params._cancelable,
-                window,
-                0,
-                params.screenX || 0,
-                params.screenY || 0,
-                params.clientX || 0,
-                params.clientY || 0,
-                params.ctrlKey || false,
-                params.altKey || false,
-                params.shiftKey || false,
-                params.metaKey || false,
-                params.button || 0,
-                params.relatedTarget || null
+        mouseEvent.initMouseEvent(eventType,
+            params._bubles,
+            params._cancelable,
+            window,
+            0,
+            params.screenX || 0,
+            params.screenY || 0,
+            params.clientX || 0,
+            params.clientY || 0,
+            params.ctrlKey || false,
+            params.altKey || false,
+            params.shiftKey || false,
+            params.metaKey || false,
+            params.button || 0,
+            params.relatedTarget || null
         );
 
         return mouseEvent;
@@ -59,6 +61,11 @@ export {BlurToolbarItem} from "./toolbar/BlurToolbarItem"
 export {FreeDrawToolbarItem} from "./toolbar/FreeDrawToolbarItem"
 export {ImageToolbarItem} from "./toolbar/ImageToolbarItem"
 export {RectToolbarItem} from "./toolbar/RectToolbarItem"
+export {PolygonToolbarItem} from "./toolbar/PolygonToolbarItem"
+export {StrokeType} from "./model/LineStyle"
+export * from "./Config"
+export * from "./model/Styles"
+export * from "./model/Font"
 
 export enum ExportType {
     XML = 0,
@@ -67,11 +74,11 @@ export enum ExportType {
     SVG = 3
 }
 
-//export abstract class Pickr {
-//    public create(config: any) : any{}
-//}
-
 // Inject to `<head>` and also available as `style`
-import style from "./style/style.css";
-//make sure style is injected into JavaScript and HTML
-const a = style;
+// import style from "./style/style.css";
+// //make sure style is injected into JavaScript and HTML
+// const a = style;
+
+if (!customElements.get('easy-annotation')) {
+    customElements.define('easy-annotation', AnnotatorElement);
+}

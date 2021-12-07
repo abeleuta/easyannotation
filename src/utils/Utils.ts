@@ -259,4 +259,18 @@ export class Utils {
         return finalEvent;
     }
 
+    public static getTarget(evt: MouseEvent | TouchEvent) {
+        let target = ((evt as any).originalTarget || (evt as any).relatedTarget || evt.target);
+        let originalTarget = (evt as any).originalTarget;
+        if (originalTarget) {
+            try {
+                originalTarget.className;
+            } catch(ex) {
+                target = (evt as any).relatedTarget || evt.target;
+            }
+        }
+
+        return target;
+    }
+
 }

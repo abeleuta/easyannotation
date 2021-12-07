@@ -31,13 +31,14 @@ export class ImageAnnotator extends RectAnnotator {
 //        foreignObject.innerHTML = '<div class="image-uploader-text">Click or drag image here</div>';
         foreignObject.innerHTML = 
             '<div style="height: 100%;display:flex;position:absolute;width:100%;">\
-                <svg style="width:100%;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 165 35">\
+                <svg style="width:100%;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 175 35">\
                     <text style="fill:black;" dy="1.5em">Click here or drag image</text>\
                 </svg></div>';
         foreignObject.appendChild(uploadInput);
         uploadInput.setAttribute('type', 'file');
         
         uploadInput.className = 'image-uploader';
+        me.svgGroupElement.style.fill = 'transparent';
         me.svgGroupElement.appendChild(foreignObject);
         foreignObject.setAttribute('width', me.width.toString());
         foreignObject.setAttribute('height', me.height.toString());
@@ -232,7 +233,11 @@ export class ImageAnnotator extends RectAnnotator {
             me.setBlur(obj.b);
         }
     }
-    
+
+    getType(): string {
+        return ImageAnnotator.xtype;
+    }
+
 }
 
 ClassManager.register(ImageAnnotator.xtype, ImageAnnotator);
