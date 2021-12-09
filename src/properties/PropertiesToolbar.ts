@@ -11,7 +11,9 @@ export class PropertiesToolbar extends Toolbar {
     
     constructor(config: Config, items: AbstractPropToolbarItem[], parent: Object) {
         super(config, items, null, parent);
-        
+
+        //exposing the part so toolbar can be styled from outside of shadow
+        this.container.setAttribute('part', 'toolbar properties');
         this.config = config;
         this.itemClickHandler = this.toolbarItemClickHandler;
     }

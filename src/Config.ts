@@ -74,8 +74,6 @@ export default interface Config {
     showProperties?: boolean;
     hideElement?: boolean;
     style?: string;
-    containerCls?: string;
-    toolbarCls?: string;
     toolbarItems?: Array<ToolbarItem>;
     defaultColors?: [] | null
 }

@@ -116,19 +116,6 @@ Include code:
      showProperties: true, // true to show properties toolbar
 
      style: null, //additional style properties to apply to Easy Annotation container element
-     containerCls: null, //additional class to add to Easy Annotation container element
-
-     //optional class to add to toolbar element. This can be usefull to add your own style to toolbar.
-     //Example: toolbarCls: 'sample-cls'. Then if you want to change colors and backrgound you can do the following:
-     //   .sample-cls {
-     //       background-color: #7ff87f;
-     //   }
-    
-     //   .sample-cls svg * {
-     //       fill: #1805A4;
-     //       stroke: #1805A4;
-     //   }
-     toolbarCls: null,
 
      // a list of items to add to toolbar element, by default contains the following items:
      toolbarItems: [

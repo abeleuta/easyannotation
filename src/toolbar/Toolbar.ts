@@ -25,8 +25,8 @@ export class Toolbar {
     protected submenuItems: ToolbarItem[];
     
     protected config: Config;
-    
-    constructor(config: Config, items: ToolbarItem[], itemClickHandler: (evt: MouseEvent, item: ToolbarItem) => void, 
+
+    constructor(config: Config, items: ToolbarItem[], itemClickHandler: (evt: MouseEvent, item: ToolbarItem) => void,
         parent: Object) {
         let me = this;
         me.items = items;
@@ -39,10 +39,9 @@ export class Toolbar {
     public init(config: Config) {
         let container = document.createElement('div');
         container.className = 'default-toolbar ' + config.ui;
-        
-        if (config.toolbarCls) {
-            container.classList.add(config.toolbarCls);
-        }
+
+        //exposing the part so toolbar can be styled from outside of shadow
+        container.setAttribute('part', 'toolbar');
         
         for (let item of this.items) {
             let toolbarElement = this.getUIElement(config, item);
@@ -72,7 +71,7 @@ export class Toolbar {
             element.title = toolbarItem.title;
         }
         
-        element.onclick = function (evt: MouseEvent) {
+        element.onclick = (evt: MouseEvent) => {
             if (BaseDialog.getOpenDialog()) {
                 BaseDialog.getOpenDialog().hide();
             }
@@ -138,12 +137,13 @@ export class Toolbar {
             if (showMenuItemsButton == null) {
                 showMenuItemsButton = document.createElement('div');
                 let configUI = me.config.ui;
-//                showMenuItemsButton.classList.add(configUI + '-toolbar-more-btn');
                 showMenuItemsButton.innerHTML = MoreIcon;
-                showMenuItemsButton.classList.add('default-toolbar-item ' + configUI);
+                showMenuItemsButton.classList.add('default-toolbar-item');
+                if (configUI !== '') {
+                    showMenuItemsButton.classList.add(configUI);
+                }
                 showMenuItemsButton.addEventListener('click', me.showMoreIcons);
                 container.appendChild(showMenuItemsButton);
-//                container.insertBefore(showMenuItemsButton, items[numTotalItems - 1].element);
             }
         }
         
@@ -154,17 +154,14 @@ export class Toolbar {
             submenuContainer = me.submenuContainer;
         if (!submenuContainer) {
             submenuContainer = document.createElement('div');
-            submenuContainer.classList.add('default-toolbar-item');
+            submenuContainer.classList.add('default-toolbar');
+            submenuContainer.classList.add('more-items-toolbar');
             if (me.config.ui != '') {
                 submenuContainer.classList.add(me.config.ui);
             }
             me.container.appendChild(submenuContainer);
             
             let subClass = 'default-toolbar-submenu-item';
-
-            // if (me.config.ui != '') {
-            //     subClass += me.config.ui + '-toolbar-submenu-item'
-            // }
 
             for (let item of me.submenuItems) {
                 if (!item.element.classList.contains(subClass)) {
@@ -189,8 +186,9 @@ export class Toolbar {
     }
     
     private hideSubMenu = (evt: MouseEvent | TouchEvent) => {
-        let me = this, target = evt.target,
+        let me = this, target = Utils.getTarget(evt),
             submenuContainer = me.submenuContainer;
+
         if (submenuContainer) {
             while (target) {
                 if (target == submenuContainer) {

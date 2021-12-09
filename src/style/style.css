@@ -36,11 +36,14 @@
     height: 30px;
     top: -30px;
     background-color: var(--toolbar-backgroud-color, #ededed);
-    /*border-top-left-radius: 5px;*/
-    /*border-top-right-radius: 5px;*/
     border: 1px solid #101010;
     border-bottom: none;
-    /*overflow:hidden;*/
+}
+
+.more-items-toolbar {
+    top: 30px;
+    right: 1px;
+    border-top: none;
 }
 
 .default-toolbar-item {
@@ -913,7 +916,8 @@
 .default-toolbar-item svg .ea-save-item,
 .default-toolbar-item svg .ea-close-item,
 .default-toolbar-item svg .ea-text-item,
-.default-toolbar-item svg .ea-settings-item
+.default-toolbar-item svg .ea-settings-item,
+.default-toolbar-item svg .ea-more-button
 {
     fill: #000;
 }
@@ -933,7 +937,8 @@
 .default-toolbar-item.dark svg .ea-settings-item,
 .default-toolbar-item.dark svg .ea-delete-item,
 .default-toolbar-item.dark svg .ea-fill-color-item,
-.default-toolbar-item.dark svg .ea-draw-color-item
+.default-toolbar-item.dark svg .ea-draw-color-item,
+.default-toolbar-item.dark svg .ea-more-button
 {
     fill: #a6a6a6;
 }

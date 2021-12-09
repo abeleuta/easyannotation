@@ -275,10 +275,8 @@ export class AnnotatorContainer {
         containerParent.appendChild(containerElement);
         containerElement.className = 'default-annotator-container ' + ui;
 
-        if (config.containerCls) {
-            containerElement.classList.add(config.containerCls);
-        }
-        
+        containerElement.setAttribute('part', 'container');
+
         if (me.config.style) {
             containerElement.setAttribute('style', me.config.style);
         }

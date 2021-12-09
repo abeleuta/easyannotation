@@ -7,7 +7,7 @@ import postcss from 'rollup-plugin-postcss';
 import commonjs from 'rollup-plugin-commonjs';
 import nodeResolve from 'rollup-plugin-node-resolve';
 
-const outputDir = "./dist/";
+const outputDir = "./";
 
 let leanPkg = Object.assign({}, pkg);
 leanPkg.scripts = {};
@@ -44,16 +44,8 @@ export default [
                 // be transpiled by a previous plugin!)
 //      extensions: [ '.js', '.coffee' ],  // Default: [ '.js' ]
 
-                // if true then uses of `global` won't be dealt with by this plugin
-                //ignoreGlobal: false,  // Default: false
-
                 // if false then skip sourceMap generation for CommonJS modules
                 sourceMap: true,  // Default: true
-
-                // explicitly specify unresolvable named exports
-                // (see below for more details)
-                // namedExports: {'@simonwep/pickr': ['Pickr', 'create']}
-                // namedExports: {'node_modules/@simonwep/pickr': ['Pickr', 'create']}
 
                 // sometimes you have to leave require statements
                 // unconverted. Pass an array containing the IDs
