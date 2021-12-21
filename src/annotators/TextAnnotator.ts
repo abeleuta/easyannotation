@@ -306,7 +306,7 @@ export class TextAnnotator extends RectAnnotator {
     
     public clean() {
         let me = this;
-        if (me.foreignObject) {
+        if (me.foreignObject && me.foreignObject.parentNode) {
             let svgContainer = me.svgGroupElement.parentElement;
             while (svgContainer.nodeName.toLowerCase() != 'svg') {
                 svgContainer = svgContainer.parentElement;

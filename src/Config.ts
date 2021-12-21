@@ -23,6 +23,11 @@ export default interface Config {
     translations?: any;
 
     /**
+     * Main class to be added to easy-annotation element.
+     */
+    mainCls?: string;
+
+    /**
      * Global draw style for all annotators.
      */
     drawStyle?: DrawStyle;

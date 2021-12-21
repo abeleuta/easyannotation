@@ -307,7 +307,6 @@ export class FillDialog extends BaseDialog {
     private pickerColorChange = (color: string) => {
         this.colorPickerDiv.style.backgroundColor = color;
         this.fillStyle.color = color;
-        console.log('picker change:', color);
     }
     
     private onOKBtnClick = () => {

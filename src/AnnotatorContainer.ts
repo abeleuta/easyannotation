@@ -271,6 +271,10 @@ export class AnnotatorContainer {
             ui = config.ui,
             imageElement = me.imageElement;
 
+        if (config.mainCls) {
+            containerParent.className = config.mainCls;
+        }
+
         config.annotatorContainer = containerParent;
         containerParent.appendChild(containerElement);
         containerElement.className = 'default-annotator-container ' + ui;
