@@ -116,6 +116,9 @@ export class AnnotatorContainer {
             internalConfig = {} as any;
         if (typeof(imageElement) === 'string') {
             me.imageElement = new Image();
+            if (config?.useCrossOrigin) {
+                me.imageElement.crossOrigin = 'anonymous';
+            }
             me.imageElement.src = imageElement;
             me.isImageElement = false;
             me.imageElement.onload = me.imageLoaded;
@@ -253,6 +256,8 @@ export class AnnotatorContainer {
                 this._showAnnotator();
             }
         }
+
+        return this;
     }
 
     private _showAnnotator = () => {
@@ -1018,13 +1023,14 @@ export class AnnotatorContainer {
 
         window.removeEventListener('resize', this.onResize);
 
-        let targetElement = this.config.targetElement
         if (this.toolbar) {
-            targetElement.removeChild(this.toolbar.getContainer());
+            let container = this.toolbar.getContainer();
+            container.parentElement?.removeChild(container);
         }
 
         if (this.propertiesToolbar) {
-            targetElement.removeChild(this.propertiesToolbar.getContainer());
+            let container = this.propertiesToolbar.getContainer();
+            container.parentElement?.removeChild(container);
         }
     }
     
@@ -1155,14 +1161,14 @@ export class AnnotatorContainer {
     }
     
     private saveAsPNG(callback: (imageData: string) => void) {
-        Utils.exportToPNG(this.imageElement, this.svgContainer, callback);
+        Utils.exportToPNG(this.imageElement, this.svgContainer, this.config.useCrossOrigin, callback);
     }
     
     private saveAsSVG() {
         return this.svgContainer.outerHTML;
     }
     
-    public getSVGContainer() : SVGElement {
+    public getSVGContainer() : SVGSVGElement {
         return this.svgContainer;
     }
     

@@ -185,4 +185,4 @@ Data can be saved as PNG, JSON or XML. Callback function will be called with one
 (see [LICENSE](https://github.com/abeleuta/easyannotation/blob/master/LICENSE) for details) - library is free of charge for Open Source projects and for personal use only.
 Other projects require a license.
 
-For more details, please visit [EasyAnnotation.com website](http://easyannotation.com/).
+For more details, please visit [EasyAnnotation.com website](http://easyannotation.net/).

@@ -85,7 +85,8 @@ export class Utils {
     }
 
     
-    public static exportToPNG(imageElement: HTMLImageElement, svgElement: SVGSVGElement, callback: (imageData: string) => void) {
+    public static exportToPNG(imageElement: HTMLImageElement, svgElement: SVGSVGElement,
+                              addCrossOriginAttribute: boolean, callback: (imageData: string) => void) {
         let width = svgElement.width.baseVal.value,
             height = svgElement.height.baseVal.value;
             
@@ -164,6 +165,10 @@ export class Utils {
         let svgBlob = new Blob([svgContent], {type: 'image/svg+xml'}),
             url = URL.createObjectURL(svgBlob),
             image = new Image();
+
+        if (addCrossOriginAttribute) {
+            image.crossOrigin = 'anonymous';
+        }
         
         image.onload = function() {
             let d = document,
@@ -191,6 +196,10 @@ export class Utils {
 
                     let pngImage = tempCanvas.toDataURL('image/png'),
                         tempImage = new Image(w, h);
+
+                    if (addCrossOriginAttribute) {
+                        tempImage.crossOrigin = 'anonymous';
+                    }
 
                     tempImage.onload = function() {
                         context.drawImage(tempImage, blurRect.x, blurRect.y);

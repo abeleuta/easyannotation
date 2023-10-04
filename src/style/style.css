@@ -44,6 +44,9 @@
     top: 30px;
     right: 1px;
     border-top: none;
+    height: auto;
+    min-height: 30px;
+    border-bottom: 1px solid #101010;
 }
 
 .default-toolbar-item {

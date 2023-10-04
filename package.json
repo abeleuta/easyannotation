@@ -1,6 +1,6 @@
 {
     "name": "easyannotation",
-    "version": "2.0.3",
+    "version": "2.0.5",
     "main": "./dist/easyannotation.min.js",
     "module": "./dist/easyannotation.esm.js",
     "description": "Image annotation in JavaScript",
@@ -21,7 +21,7 @@
     "author": "Andrei Beleuta",
     "contributors": [],
     "types": "typings/index.d.ts",
-    "homepage": "http://easyannotation.com/",
+    "homepage": "http://easyannotation.net/",
     "repository": "https://github.com/abeleuta/easyannotation",
     "devDependencies": {
         "typescript": "^3.6.3",

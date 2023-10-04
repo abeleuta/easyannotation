@@ -80,5 +80,10 @@ export default interface Config {
     hideElement?: boolean;
     style?: string;
     toolbarItems?: Array<ToolbarItem>;
-    defaultColors?: [] | null
+    defaultColors?: [] | null;
+
+    /**
+     * If true the crossOrigin="anonymous" attribute will be added to the final image so CORS related issues are bypassed.
+     */
+    useCrossOrigin?: boolean;
 }
